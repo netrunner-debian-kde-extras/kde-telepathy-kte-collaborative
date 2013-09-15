@@ -1,0 +1,46 @@
+Author: Sven Brauch <svenbrauch@googlemail.com>
+Date:   Fri Sep 13 00:11:10 2013 +0200
+Description: backport commit 1623fd63591f25872115d88bd4d289e7af1f4a79
+    Install private libraries in ktecollaborative/ subdir instead of plain lib
+    
+    If it breaks, it's because of this commit ;)
+
+--- a/common/CMakeLists.txt
++++ b/common/CMakeLists.txt
+@@ -37,4 +37,4 @@
+     ${LIBQINFINITY_LIBRARIES}
+ )
+ 
+-install(TARGETS kobbycommon DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
++install(TARGETS kobbycommon DESTINATION ${LIB_INSTALL_DIR}/ktecollaborative)
+--- a/kioslave/CMakeLists.txt
++++ b/kioslave/CMakeLists.txt
+@@ -11,6 +11,8 @@
+ set(kio_infinity_PART_SRCS
+     kio_infinity.cpp
+ )
++
++set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR}/ktecollaborative/)
+ kde4_add_plugin(kio_infinity ${kio_infinity_PART_SRCS})
+ 
+ target_link_libraries(kio_infinity
+--- a/kte-plugin/ktpintegration/CMakeLists.txt
++++ b/kte-plugin/ktpintegration/CMakeLists.txt
+@@ -4,6 +4,8 @@
+     ../ui/selecteditorwidget.cpp
+ )
+ 
++set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR}/ktecollaborative/)
++
+ set(IS_KTP_INTERNAL_MODULE TRUE) # aw yeah
+ find_package(TelepathyQt4 0.8.9 REQUIRED)
+ find_package(KTp REQUIRED)
+@@ -25,7 +27,7 @@
+                       ${KTP_WIDGETS_LIBRARIES}
+ )
+ 
+-install(TARGETS inftube ${INSTALL_TARGETS_DEFAULT_ARGS})
++install(TARGETS inftube DESTINATION ${LIB_INSTALL_DIR}/ktecollaborative/)
+ 
+ # the tube handlers
+ kde4_add_executable(infinoteclienttubehandler clienttubehandler.cpp)
