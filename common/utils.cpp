@@ -17,7 +17,6 @@
  */
 
 #include "common/utils.h"
-#include "selecteditorwidget.h"
 
 #include <libqinfinity/explorerequest.h>
 #include <ktexteditor/configinterface.h>
@@ -26,69 +25,10 @@
 #include <KTextEditor/View>
 #include <KConfigGroup>
 #include <KConfig>
-#include <KStandardDirs>
-#include <KRun>
-#include <KToolInvocation>
 
 using QInfinity::ExploreRequest;
 
-bool tryOpenDocument(const KUrl& url)
-{
-    KUrl dir = url.upUrl();
-    KConfig config("ktecollaborative");
-    KConfigGroup group = config.group("applications");
-    // We do not set a default value here, so the dialog is always
-    // displayed the first time the user uses the feature.
-    QString command = group.readEntry("editor", "");
-    if ( command.isEmpty() ) {
-        return false;
-    }
-
-    command = command.replace("%u", url.url());
-    command = command.replace("%d", dir.url());
-    command = command.replace("%h", url.host() + ( url.port() ? (":" + QString::number(url.port())) : QString()));
-    QString executable = command.split(' ').first();
-    QString arguments = QStringList(command.split(' ').mid(1, -1)).join(" ");
-    QString executablePath = KStandardDirs::findExe(executable);
-    if ( executablePath.isEmpty() ) {
-        return false;
-    }
-    return KRun::runCommand(executablePath + " " + arguments, 0);
-}
-
-bool tryOpenDocumentWithDialog(const KUrl& url)
-{
-    while ( ! tryOpenDocument(url) ) {
-        SelectEditorDialog dlg;
-        if ( ! dlg.exec() ) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool ensureNotifierModuleLoaded()
-{
-    KStandardDirs d;
-    QString desktopPath = d.findResource("services", "infinotenotifier.desktop");
-    return KToolInvocation::startServiceByDesktopPath(desktopPath) == 0;
-}
-
-QString getUserName()
-{
-    QString user;
-#ifdef Q_OS_WIN
-    user = qgetenv("USERNAME");
-#else
-    user = qgetenv("USER");
-#endif
-    if ( user.length() > 0 ) {
-        user[0] = user[0].toUpper();
-    }
-    return user;
-}
-
-IterLookupHelper::IterLookupHelper(QString lookupPath, const QInfinity::Browser* browser)
+IterLookupHelper::IterLookupHelper(QString lookupPath, QInfinity::Browser* browser)
         : QObject()
         , m_browser(browser)
         , m_currentIter(*m_browser)
@@ -103,18 +43,6 @@ IterLookupHelper::IterLookupHelper(QString lookupPath, const QInfinity::Browser*
     }
     kDebug() << "finding iter for" << m_remainingComponents;
 };
-
-void IterLookupHelper::setDeleteOnFinish(bool deleteOnFinish)
-{
-    if ( deleteOnFinish ) {
-        connect(this, SIGNAL(done(QInfinity::BrowserIter)), this, SLOT(deleteLater()));
-        connect(this, SIGNAL(failed()), this, SLOT(deleteLater()));
-    }
-    else {
-        disconnect(this, SIGNAL(done(QInfinity::BrowserIter)), this, SLOT(deleteLater()));
-        connect(this, SIGNAL(failed()), this, SLOT(deleteLater()));
-    }
-}
 
 bool IterLookupHelper::success() const
 {
@@ -137,23 +65,6 @@ void IterLookupHelper::explore(QInfinity::BrowserIter directory)
 QInfinity::BrowserIter IterLookupHelper::result() const
 {
     return m_currentIter;
-}
-
-void IterLookupHelper::setExploreResult(bool exploreResult)
-{
-    if ( exploreResult ) {
-        connect(this, SIGNAL(done(QInfinity::BrowserIter)), this, SLOT(exploreIfDirectory(QInfinity::BrowserIter)));
-    }
-    else {
-        disconnect(this, SIGNAL(done(QInfinity::BrowserIter)), this, SLOT(exploreIfDirectory(QInfinity::BrowserIter)));
-    }
-}
-
-void IterLookupHelper::exploreIfDirectory(QInfinity::BrowserIter iter)
-{
-    if ( iter.isDirectory() && ! iter.isExplored() ) {
-        iter.explore();
-    }
 }
 
 void IterLookupHelper::directoryExplored()

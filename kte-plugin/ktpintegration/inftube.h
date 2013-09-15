@@ -32,7 +32,6 @@
 #include <TelepathyQt/AbstractClientObserver>
 #include <TelepathyQt/ChannelClassSpecList>
 #include <KTp/telepathy-handler-application.h>
-#include <KTp/actions.h>
 
 #include <KJob>
 #include <KUrl>
@@ -41,14 +40,13 @@
 
 #include "inftube_export.h"
 
-typedef KTp::Actions::DocumentList DocumentList;
-
 namespace Tp {
     class StreamTubeClient;
 }
 
 class ServerManager;
 
+typedef QList<KUrl> DocumentList;
 typedef QList<QVariantMap> ChannelList;
 Q_DECLARE_METATYPE(ChannelList)
 
@@ -56,10 +54,6 @@ inline Tp::ChannelClassSpecList channelClassList()
 {
     return Tp::ChannelClassSpecList() << Tp::ChannelClassSpec::incomingStreamTube("infinity");
 }
-
-QVector<QString> documentsListFromParameters(const QVariantMap& parameters,
-                                             bool* ok,
-                                             QVector<KUrl>* sourcePaths=0);
 
 Tp::AccountManagerPtr getAccountManager();
 
@@ -139,13 +133,21 @@ private:
     Tp::StreamTubeClientPtr m_tubeClient;
     mutable QList<Tp::StreamTubeChannelPtr> m_channels;
 
+private:
+    /**
+     * @brief Try to open the given document based on the current configuration in KConfig
+     *
+     * @param url The URL to open
+     * @return bool true if the command could be executed, false otherwise
+     */
+    bool tryOpenDocument(const KUrl& url);
+
 public slots:
     /**
      * @brief Called when a tube gets accepted.
      */
     void tubeAcceptedAsTcp(QHostAddress,quint16,QHostAddress,quint16,Tp::AccountPtr,Tp::IncomingStreamTubeChannelPtr);
     void tubeClosed(Tp::AccountPtr,Tp::IncomingStreamTubeChannelPtr,QString,QString);
-    void targetPresenceChanged(Tp::Presence);
 };
 
 // This class is for requesting a new tube
@@ -154,16 +156,23 @@ Q_OBJECT
 public:
     explicit InfTubeRequester(QObject* parent = 0);
     /**
+     * @brief Initiate editing a list of documents with the given contacts.
+     *
+     * @param contacts The list of contacts to edit documents with
+     * @param initialDocuments The documents all contacts should have opened initially
+     * @return bool true if the request was successful
+     */
+    bool offer(const Tp::AccountPtr& account, const Tp::Contacts& contacts, const DocumentList& documents);
+
+    /**
      * @brief Offer the given documents to the given contact
      *
      * @param account The account to use to create the offer
      * @param contact The contact to share the documents with
      * @param documents A list of documents to share. Must not be empty.
-     * @return the channel request or 0 on failure
+     * @return bool true on success
      */
-    Tp::PendingChannelRequest* offer(const Tp::AccountPtr& account,
-                                     const Tp::ContactPtr& contact,
-                                     const KTp::Actions::DocumentList& documents);
+    bool offer(const Tp::AccountPtr& account, const Tp::ContactPtr& contact, const DocumentList& documents);
 
     /**
      * @brief Offer the given documents to an existing (!) chatroom.
@@ -171,14 +180,22 @@ public:
      * @param account The acconut to use to create the offer
      * @param chatroom The chatroom to offer the tube to
      * @param documents A list of documents to share initially. Must not be empty.
-     * @return the channel request or 0 on failure
+     * @return bool true on success
      */
-    Tp::PendingChannelRequest* offer(const Tp::AccountPtr& account,
-                                     const QString& chatroom,
-                                     const KTp::Actions::DocumentList& documents);
+    bool offer(const Tp::AccountPtr& account, const QString& chatroom, const DocumentList& documents);
 
 private:
-    KTp::Actions::DocumentList m_shareDocuments;
+    /**
+     * @brief Create a QVariantMap containing a list of documents to transmit with the tube ofer
+     *
+     * @param documents The doucments which you want to be opened initially
+     * @return const QVariantMap A QVariantMap containing the document list, suitable to be used in a tube request
+     */
+    const QVariantMap createHints(const DocumentList& documents) const;
+
+    bool createRequest(const Tp::AccountPtr account, const DocumentList documents, QVariantMap requestBase);
+
+    DocumentList m_shareDocuments;
 
 public slots:
     void onTubeRequestReady(Tp::PendingOperation*);
@@ -212,7 +229,6 @@ public:
 public slots:
     void tubeRequested(Tp::AccountPtr,Tp::OutgoingStreamTubeChannelPtr,QDateTime,Tp::ChannelRequestHints);
     void tubeClosed(Tp::AccountPtr,Tp::OutgoingStreamTubeChannelPtr,QString,QString);
-    void targetPresenceChanged(Tp::Presence);
 
 private:
     mutable QList<Tp::StreamTubeChannelPtr> m_channels;

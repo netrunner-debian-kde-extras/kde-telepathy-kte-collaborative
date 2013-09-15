@@ -4,15 +4,7 @@
 
 project(kobby)
 cmake_minimum_required(VERSION 2.6)
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules )
-
-set(KTECOLLAB_VERSION_MAJOR 0)
-set(KTECOLLAB_VERSION_MINOR 1)
-set(KTECOLLAB_VERSION_PATCH 80)
-set(KTECOLLAB_VERSION_STRING ${KTECOLLAB_VERSION_MAJOR}.${KTECOLLAB_VERSION_MINOR}.${KTECOLLAB_VERSION_PATCH})
-set(LIBINFINITY_VERSION 0.5) # TODO use this for finding libinfinity
-
-configure_file(version.h.in version.h)
+SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules )
 
 find_package(KDE4 REQUIRED)
 find_package(Libqinfinity REQUIRED)
@@ -30,4 +22,3 @@ add_subdirectory(kte-plugin)
 add_subdirectory(kioslave)
 add_subdirectory(common)
 add_subdirectory(tests)
-add_subdirectory(notifier-module)

@@ -26,7 +26,6 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QCheckBox>
-#include <QButtonGroup>
 #include <QVariant>
 
 #include <KLocalizedString>
@@ -44,12 +43,11 @@ SelectEditorWidget::SelectEditorWidget(const QString& selectedEntry, QWidget* pa
     m_validChoices.insert("kwrite %u", i18n("Open in %1", QLatin1String("KWrite")));
     m_validChoices.insert("kate %u", i18n("Open in %1", QLatin1String("Kate")));
     m_validChoices.insert("kile %u", i18n("Open in %1", QLatin1String("Kile")));
-    m_validChoices.insert("kdevelop %u", i18n("Open in %1", QLatin1String("KDevelop")));
+    // TODO implement this in KDevelop first
+//     m_validChoices.insert("kdevelop -f %u", i18n("Open in %1", "KDevelop"));
 
-    QWidget* buttonsWidget = new QWidget;
-    buttonsWidget->setLayout(new QVBoxLayout);
-    m_buttonsGroup = new QButtonGroup(buttonsWidget);
-
+    m_buttonsGroup = new QWidget;
+    m_buttonsGroup->setLayout(new QVBoxLayout);
     bool haveSuggestion = false;
     foreach ( const QString& choice, m_validChoices.keys() ) {
         const QString& readableName = m_validChoices[choice];
@@ -57,8 +55,7 @@ SelectEditorWidget::SelectEditorWidget(const QString& selectedEntry, QWidget* pa
         radio->setProperty("command", choice);
 
         connect(radio, SIGNAL(toggled(bool)), this, SIGNAL(selectionChanged()));
-        m_buttonsGroup->addButton(radio);
-        buttonsWidget->layout()->addWidget(radio);
+        m_buttonsGroup->layout()->addWidget(radio);
 
         const QString appname = choice.split(' ').first();
         if ( KStandardDirs::findExe(appname).isEmpty() ) {
@@ -66,7 +63,7 @@ SelectEditorWidget::SelectEditorWidget(const QString& selectedEntry, QWidget* pa
             radio->setChecked(false);
             radio->setEnabled(false);
             radio->setToolTip(i18nc("%1 is an application name",
-                                    "The application \"%1\" is not installed on your computer.", appname));
+                                    "This application (\"%1\") is not installed on your computer.", appname));
         }
         else if ( selectedEntry == choice ) {
             // pre-select the passed one
@@ -76,9 +73,9 @@ SelectEditorWidget::SelectEditorWidget(const QString& selectedEntry, QWidget* pa
     }
 
     if ( ! haveSuggestion ) {
-        QStringList preferredDefaults = QStringList() << "kate" << "kwrite" << "kdevelop" << "gobby" << "dolphin" << "kile";
+        QStringList preferredDefaults = QStringList() << "kate" << "kwrite" << "gobby" << "dolphin" << "kile";
         foreach ( const QString& preferred, preferredDefaults ) {
-            foreach ( QAbstractButton* button, m_buttonsGroup->buttons() ) {
+            foreach ( QRadioButton* button, m_buttonsGroup->findChildren<QRadioButton*>() ) {
                 if ( button->isEnabled() && button->property("command").toString().startsWith(preferred) ) {
                     button->setChecked(true);
                     haveSuggestion = true;
@@ -90,19 +87,18 @@ SelectEditorWidget::SelectEditorWidget(const QString& selectedEntry, QWidget* pa
 
     setLayout(new QVBoxLayout);
     layout()->addWidget(new QLabel(i18n("What action should be taken for collaborative documents by default?")));
-    layout()->addWidget(buttonsWidget);
+    layout()->addWidget(m_buttonsGroup);
 }
 
-SelectEditorWidget::EditorEntry SelectEditorWidget::selectedEntry() const
+QPair< QString, QString > SelectEditorWidget::selectedEntry() const
 {
-    EditorEntry entry;
-    QAbstractButton* checked = m_buttonsGroup->checkedButton();
-    if ( checked ) {
-        const QString& command = checked->property("command").toString();
-        entry.command = command;
-        entry.readableName = m_validChoices[command];
+    foreach ( const QRadioButton* button, m_buttonsGroup->findChildren<QRadioButton*>() ) {
+        if ( button->isChecked() ) {
+            const QString& command = button->property("command").toString();
+            return QPair<QString, QString>(command, m_validChoices[command]);
+        }
     }
-    return entry;
+    return QPair<QString, QString>();
 }
 
 SelectEditorDialog::SelectEditorDialog(QWidget* parent, Qt::WindowFlags flags)
@@ -122,7 +118,7 @@ SelectEditorDialog::SelectEditorDialog(QWidget* parent, Qt::WindowFlags flags)
     button(KDialog::Cancel)->setText(i18n("Cancel and reject document"));
 }
 
-SelectEditorWidget::EditorEntry SelectEditorDialog::selectedEntry() const
+QPair< QString, QString > SelectEditorDialog::selectedEntry() const
 {
     return m_selectWidget->selectedEntry();
 }
@@ -131,7 +127,7 @@ void SelectEditorDialog::accept()
 {
     KConfig config("ktecollaborative");
     KConfigGroup group(config.group("applications"));
-    group.writeEntry("editor", m_selectWidget->selectedEntry().command);
+    group.writeEntry("editor", m_selectWidget->selectedEntry().first);
     KDialog::accept();
 }
 

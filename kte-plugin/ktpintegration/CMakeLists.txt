@@ -1,9 +1,8 @@
 set(inftube_SRCS
     connectionswidget.cpp
     inftube.cpp
+    ../ui/selecteditorwidget.cpp
 )
-
-set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR}/ktecollaborative/)
 
 set(IS_KTP_INTERNAL_MODULE TRUE) # aw yeah
 find_package(TelepathyQt4 0.8.9 REQUIRED)
@@ -13,19 +12,11 @@ include_directories(
     ${KDE4_INCLUDES}
     ${TELEPATHY_QT4_INCLUDE_DIR}
     ${KTP_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}
-    ${LIBQINFINITY_INCLUDES}
 )
 
 kde4_add_library(inftube SHARED ${inftube_SRCS})
-set_target_properties( inftube
-    PROPERTIES
-    VERSION ${KTECOLLAB_VERSION_STRING}
-    SOVERSION ${KTECOLLAB_VERSION_STRING}
-)
 
 target_link_libraries(inftube
-                      ktecollaborativecommon
                       ${KDE4_KDEUI_LIBS}
                       ${TELEPATHY_QT4_LIBRARIES}
                       ${KTP_LIBRARIES}
@@ -34,7 +25,7 @@ target_link_libraries(inftube
                       ${KTP_WIDGETS_LIBRARIES}
 )
 
-install(TARGETS inftube DESTINATION ${LIB_INSTALL_DIR}/ktecollaborative/)
+install(TARGETS inftube ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # the tube handlers
 kde4_add_executable(infinoteclienttubehandler clienttubehandler.cpp)

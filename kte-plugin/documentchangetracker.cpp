@@ -95,9 +95,8 @@ KTextEditor::MovingRange* DocumentChangeTracker::addHighlightedRange(const QStri
     attrib->setToolTip(name);
     r->setAttribute(attrib);
     m_ranges << r;
-    if ( ! name.isEmpty() && ( ! m_existingColors.contains(name) || m_existingColors[name] != color ) ) {
+    if ( ! name.isEmpty() ) {
         m_existingColors[name] = color;
-        emit colorTableChanged();
     }
     return r;
 }

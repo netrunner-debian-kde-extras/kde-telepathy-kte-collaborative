@@ -20,13 +20,11 @@
 #include "inftube.h"
 
 #include "infinoted.h"
-#include "common/selecteditorwidget.h"
-#include "common/utils.h"
+#include "../ui/selecteditorwidget.h"
 
 #include <KTp/debug.h>
 #include <KTp/Widgets/contact-grid-dialog.h>
 #include <KTp/contact-factory.h>
-#include <KTp/actions.h>
 #include <TelepathyQt/AccountFactory>
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/StreamTubeClient>
@@ -48,7 +46,6 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <unistd.h>
-#include <kdirnotify.h>
 
 QDBusArgument &operator<<(QDBusArgument &argument, const ChannelList& message) {
     argument.beginArray(qMetaTypeId<QVariantMap>());
@@ -60,6 +57,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const ChannelList& message) {
 }
 
 const QDBusArgument &operator>>(const QDBusArgument &argument, ChannelList &message) {
+    kDebug() << "unmarshalling";
     argument.beginArray();
     while ( ! argument.atEnd() ) {
         QVariantMap element;
@@ -67,6 +65,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, ChannelList &mess
         message.append(element);
     }
     argument.endArray();
+    kDebug() << "done";
     return argument;
 }
 
@@ -204,6 +203,37 @@ void InfTubeRequester::jobFinished(KJob* job)
     emit collaborativeDocumentReady(url);
 }
 
+const QVariantMap InfTubeRequester::createHints(const DocumentList& documents) const
+{
+    QVariantMap hints;
+    hints.insert("initialDocumentsSize", documents.size());
+    for ( int i = 0; i < documents.size(); i++ ) {
+        hints.insert("initialDocument" + QString::number(i), documents.at(i).fileName());
+    }
+    return hints;
+}
+
+bool InfTubeRequester::createRequest(const Tp::AccountPtr account, const DocumentList documents, QVariantMap requestBase)
+{
+    QVariantMap hints = createHints(documents);
+    m_shareDocuments = documents;
+
+    requestBase.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"),
+                       TP_QT_IFACE_CHANNEL_TYPE_STREAM_TUBE);
+    requestBase.insert(TP_QT_IFACE_CHANNEL_TYPE_STREAM_TUBE + QLatin1String(".Service"),
+                       QLatin1String("infinote"));
+
+    Tp::PendingChannelRequest* channelRequest;
+    channelRequest = account->ensureChannel(requestBase,
+                                            QDateTime::currentDateTime(),
+                                            "org.freedesktop.Telepathy.Client.KTp.infinoteServer",
+                                            hints);
+
+    connect(channelRequest, SIGNAL(finished(Tp::PendingOperation*)),
+            this, SLOT(onTubeRequestReady(Tp::PendingOperation*)));
+    return true;
+}
+
 void InfTubeRequester::onTubeRequestReady(Tp::PendingOperation* operation)
 {
     kDebug() << "TUBE REQUEST FINISHED";
@@ -242,24 +272,35 @@ void InfTubeRequester::onTubeReady(Tp::PendingOperation* operation)
         KIO::FileCopyJob* job = KIO::file_copy(document, x, -1, KIO::HideProgressInfo);
         connect(job, SIGNAL(finished(KJob*)), this, SLOT(jobFinished(KJob*)));
     }
+
 }
 
-Tp::PendingChannelRequest* InfTubeRequester::offer(const Tp::AccountPtr& account, const Tp::ContactPtr& contact, const DocumentList& documents)
+bool InfTubeRequester::offer(const Tp::AccountPtr& account, const Tp::ContactPtr& contact, const DocumentList& documents)
 {
-    m_shareDocuments = documents;
-    Tp::PendingChannelRequest* req = KTp::Actions::startCollaborativeEditing(account, contact, documents);
-    connect(req, SIGNAL(finished(Tp::PendingOperation*)),
-            this, SLOT(onTubeRequestReady(Tp::PendingOperation*)));
-    return req;
+    kDebug() << "share with account requested";
+    QVariantMap request;
+    request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"),
+                   (uint) Tp::HandleTypeContact);
+    request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandle"),
+                   contact->handle().at(0));
+    return createRequest(account, documents, request);
 }
 
-Tp::PendingChannelRequest* InfTubeRequester::offer(const Tp::AccountPtr& account, const QString& chatroom, const DocumentList& documents)
+bool InfTubeRequester::offer(const Tp::AccountPtr& account, const QString& chatroom, const DocumentList& documents)
 {
-    m_shareDocuments = documents;
-    Tp::PendingChannelRequest* req = KTp::Actions::startCollaborativeEditing(account, chatroom, documents);
-    connect(req, SIGNAL(finished(Tp::PendingOperation*)),
-            this, SLOT(onTubeRequestReady(Tp::PendingOperation*)));
-    return req;
+    kDebug() << "share with chatroom" << chatroom << "requested";
+    QVariantMap request;
+    request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"),
+                   (uint) Tp::HandleTypeRoom);
+    request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetID"),
+                   chatroom);
+    return createRequest(account, documents, request);
+}
+
+bool InfTubeRequester::offer(const Tp::AccountPtr& /*account*/, const Tp::Contacts& /*contact*/, const DocumentList& /*documents*/)
+{
+    kWarning() << "not implemented";
+    return false;
 }
 
 QList< Tp::StreamTubeChannelPtr > InfTubeServer::getChannels() const
@@ -299,21 +340,6 @@ void InfTubeServer::tubeClosed(Tp::AccountPtr , Tp::OutgoingStreamTubeChannelPtr
     }
 }
 
-void InfTubeServer::targetPresenceChanged(Tp::Presence presence)
-{
-    Tp::Contact* contact = qobject_cast<Tp::Contact*>(QObject::sender());
-    if ( presence == Tp::Presence::offline() ) {
-        // Close channels when the target goes offline
-        foreach ( Tp::StreamTubeChannelPtr channel, m_channels ) {
-            if ( channel->targetContact()->id() == contact->id() ) {
-                kDebug() << "closing channel" << channel;
-                channel->requestClose();
-                m_channels.removeAll(channel);
-            }
-        }
-    }
-}
-
 void InfTubeServer::tubeRequested(Tp::AccountPtr account, Tp::OutgoingStreamTubeChannelPtr channel, QDateTime , Tp::ChannelRequestHints requestHints)
 {
     kDebug() << "tube requested";
@@ -324,138 +350,83 @@ void InfTubeServer::tubeRequested(Tp::AccountPtr account, Tp::OutgoingStreamTube
         kDebug() << requestHints.allHints();
         return;
     }
-
-    connect(channel->targetContact().data(), SIGNAL(presenceChanged(Tp::Presence)),
-            this, SLOT(targetPresenceChanged(Tp::Presence)));
-
     // set infinoted's socket as the local endpoint of the tube
     unsigned short port = -1;
-    bool success = startInfinoted(&port);
-    if ( ! success ) {
-        KMessageBox::detailedError(0, i18n("Failed to start collaborative server, the session could not be initiated."),
-                                   i18nc("%1: directory", "Look at the log files in %1 for more information.", serverDirectory(port)));
-        channel->requestClose();
-        return;
-    }
+    startInfinoted(&port);
 
     QVariantMap hints;
     hints = hints.unite(requestHints.allHints());
     hints.insert("localSocket", QString::number(port));
 
-    KUrl localUrl;
-    localUrl.setProtocol("inf");
-    localUrl.setHost("127.0.0.1");
-    localUrl.setUser(account->displayName());
-    localUrl.setPort(port);
-    if ( hints.contains("needToOpenDocument") && hints["needToOpenDocument"].toBool() == true ) {
-        // For tubes requested from e.g. ktp-contact-list, the server side
-        // also needs to open the document.
-        bool ok = false;
-        QVector<KUrl> sources;
-        QVector<QString> paths = documentsListFromParameters(hints, &ok, &sources);
-        // TODO error handling
-        for ( int i = 0; i < sources.size(); i++ ) {
-            const QString path = paths.at(i);
-            localUrl.setPath(path);
-            const KUrl source = sources.at(i);
-            if ( source.isValid() ) {
-                // TODO waiting?
-                kDebug() << "copying file" << source;
-                KIO::file_copy(source, localUrl, KIO::HideProgressInfo);
-            }
-        }
-        foreach ( const QString& path, paths ) {
-            localUrl.setPath(path);
-            tryOpenDocumentWithDialog(localUrl);
-        }
-    }
-
     m_tubeServer->exportTcpSocket(QHostAddress(QHostAddress::LocalHost), port, hints);
 
     channel->setProperty("accountPath", account->objectPath());
     m_channels.append(channel);
+}
 
-    ensureNotifierModuleLoaded();
-    localUrl.setPath("/");
-    kDebug() << "emitting entered URL" << localUrl;
-    OrgKdeKDirNotifyInterface::emitEnteredDirectory(localUrl.url());
+QString username() {
+#ifdef Q_OS_WIN
+    return qgetenv("USERNAME");
+#else
+    return qgetenv("USER");
+#endif
 }
 
 QString InfTubeServer::serverDirectory(unsigned short port) const
 {
-    return QDir::tempPath() + "/infinote-" + getUserName() + "/server-" + QString::number(port);
+    return QDir::tempPath() + "/infinote-" + username() + "/server-" + QString::number(port);
 }
 
 bool InfTubeServer::startInfinoted(unsigned short* port)
 {
-    *port = 49152 + (QTime::currentTime().msec() + QTime::currentTime().second() * 1000) % (65535-49152);
-    bool running = false;
-    int retriesLeft = 15;
-    while ( ! running && retriesLeft >= 0 ) {
-        retriesLeft -= 1;
-        // Try next port
-        *port = *port >= 65535 ? 49152 : *port + 1;
-        kDebug() << "trying port" << *port;
-        // Ensure the server directory actually exists
-        QDir d(serverDirectory(*port));
-        if ( ! d.exists() ) {
-            d.mkpath(d.path());
+    // Find a free port by letting the system choose one for a QTcpServer, then closing that
+    // server and using the port it was assigned. Arguably not optimal but close enough.
+    {
+        QTcpServer s;
+        s.listen(QHostAddress::LocalHost, 0);
+        *port = s.serverPort();
+        s.close();
+        usleep(200000);
+    }
+    // Ensure the server directory actually exists
+    QDir d(serverDirectory(*port));
+    if ( ! d.exists() ) {
+        d.mkpath(d.path());
+    }
+    QProcess* serverProcess = new QProcess;
+    m_serverProcesses << serverProcess;
+    serverProcess->setEnvironment(QStringList() << "LIBINFINITY_DEBUG_PRINT_TRAFFIC=1");
+    serverProcess->setStandardOutputFile(serverDirectory(*port) + "/infinoted.log");
+    serverProcess->setStandardErrorFile(serverDirectory(*port) + "/infinoted.errors");
+    serverProcess->start(QString(INFINOTED_PATH), QStringList() << "--security-policy=no-tls"
+                                           << "-r" << serverDirectory(*port) << "-p" << QString::number(*port));
+    serverProcess->waitForStarted(500);
+    int timeout = 30; // 30 retries at 100 ms -> 3s
+    for ( int i = 0; i < timeout; i ++ ) {
+        if ( serverProcess->state() != QProcess::Running ) {
+            kWarning() << "server did not start";
+            return false;
         }
-        QProcess* serverProcess = new QProcess;
-        m_serverProcesses << serverProcess;
-        serverProcess->setEnvironment(QStringList() << "LIBINFINITY_DEBUG_PRINT_TRAFFIC=1");
-        serverProcess->setStandardOutputFile(serverDirectory(*port) + "/infinoted.log");
-        serverProcess->setStandardErrorFile(serverDirectory(*port) + "/infinoted.errors");
-        serverProcess->start(QString(INFINOTED_PATH), QStringList() << "--security-policy=no-tls"
-                                            << "-r" << serverDirectory(*port) << "-p" << QString::number(*port));
-        serverProcess->waitForStarted(500);
-        int timeout = 30; // 30 retries at 100 ms -> 3s
-        for ( int i = 0; i < timeout; i ++ ) {
-            if ( serverProcess->state() != QProcess::Running ) {
-                kDebug() << "server did not start";
-                break;
-            }
-            QTcpSocket s;
-            s.connectToHost("127.0.0.1", *port);
-            if ( s.waitForConnected(50) ) {
-                running = true;
-                kDebug() << "successfully started infinioted on port" << *port
-                         << "( root dir" << serverDirectory(*port) << ")";
-                break;
-            }
-            usleep(50000);
+        QTcpSocket s;
+        s.connectToHost("127.0.0.1", *port);
+        if ( s.waitForConnected(100) ) {
+            break;
         }
-        kDebug() << "failed, trying next port";
     }
     usleep(200000);
-    return running;
+    kDebug() << "successfully started infinioted on port" << *port << "( root dir" << serverDirectory(*port) << ")";
+    return true;
 }
 
 InfTubeServer::~InfTubeServer()
 {
     kDebug() << "DESTROYING SERVER";
-    qDeleteAll(m_serverProcesses);
 }
 
 QList<Tp::StreamTubeChannelPtr> InfTubeClient::getChannels() const {
     m_channels = cleanupChannelList(m_channels);
     return m_channels;
 };
-
-void InfTubeClient::targetPresenceChanged(Tp::Presence presence)
-{
-    Tp::Contact* contact = qobject_cast<Tp::Contact*>(QObject::sender());
-    if ( presence == Tp::Presence::offline() ) {
-        // Close channels when the target goes offline
-        foreach ( Tp::StreamTubeChannelPtr channel, m_channels ) {
-            if ( channel->targetContact()->id() == contact->id() ) {
-                kDebug() << "closing channel" << channel;
-                channel->requestClose();
-                m_channels.removeAll(channel);
-            }
-        }
-    }
-}
 
 void InfTubeClient::listen()
 {
@@ -479,27 +450,28 @@ void InfTubeClient::tubeClosed(Tp::AccountPtr , Tp::IncomingStreamTubeChannelPtr
     }
 }
 
-QVector<QString> documentsListFromParameters(const QVariantMap& parameters, bool* ok, QVector<KUrl>* sourcePaths) {
-    QVector<QString> items;
+bool InfTubeClient::tryOpenDocument(const KUrl& url)
+{
+    KUrl dir = url.upUrl();
+    KConfig config("ktecollaborative");
+    KConfigGroup group = config.group("applications");
+    // We do not set a default value here, so the dialog is always
+    // displayed the first time the user uses the feature.
+    QString command = group.readEntry("editor", "");
+    if ( command.isEmpty() ) {
+        return false;
+    }
 
-    const int initialSize = parameters.contains("initialDocumentsSize") ?
-                            parameters["initialDocumentsSize"].toInt(ok) : 0;
-    if ( ! *ok ) {
-        return items;
+    command = command.replace("%u", url.url());
+    command = command.replace("%d", dir.url());
+    command = command.replace("%h", url.host() % ( url.port() ? (":" + QString::number(url.port())) : QString()));
+    QString executable = command.split(' ').first();
+    QString arguments = QStringList(command.split(' ').mid(1, -1)).join(" ");
+    QString executablePath = KStandardDirs::findExe(executable);
+    if ( executablePath.isEmpty() ) {
+        return false;
     }
-    for ( int i = 0; i < initialSize; i++ ) {
-        const QString key = "initialDocument" + QString::number(i);
-        const QString path = parameters[key].toString();
-        if ( path.isEmpty() ) {
-            kWarning() << "invalid path at index" << i;
-            continue;
-        }
-        items << path;
-        if ( sourcePaths ) {
-            *sourcePaths << KUrl(parameters[key + "_source"].toString());
-        }
-    }
-    return items;
+    return KRun::runCommand(executablePath + " " + arguments, 0);
 }
 
 void InfTubeClient::tubeAcceptedAsTcp(QHostAddress /*address*/, quint16 port, QHostAddress , quint16 , Tp::AccountPtr account, Tp::IncomingStreamTubeChannelPtr tube)
@@ -508,36 +480,35 @@ void InfTubeClient::tubeAcceptedAsTcp(QHostAddress /*address*/, quint16 port, QH
     kDebug() << "parameters:" << tube->parameters();
     // TODO error handling
     m_port = port;
+    bool ok = false;
+    const int initialSize = tube->parameters().contains("initialDocumentsSize") ? tube->parameters()["initialDocumentsSize"].toInt(&ok) : 0;
     KUrl url = localUrl();
     setNicknameFromAccount(account);
     url.setUser(nickname());
-
-    connect(tube->targetContact().data(), SIGNAL(presenceChanged(Tp::Presence)),
-            this, SLOT(targetPresenceChanged(Tp::Presence)));
-
-    // Handle opening the attached documents
-    bool ok = false;
-    QVector<QString> paths = documentsListFromParameters(tube->parameters(), &ok);
-    if ( ! ok ) {
+    if ( ! ok || initialSize == 0 ) {
         KRun::runUrl(url.url(), "inode/directory", 0);
     }
     else {
-        foreach ( const QString& path, paths ) {
+        for ( int i = 0; i < initialSize; i++ ) {
+            const QString key = "initialDocument" + QString::number(i);
+            const QString path = tube->parameters().contains(key) ? tube->parameters()[key].toString() : QString();
+            if ( path.isEmpty() ) {
+                kWarning() << "invalid path at index" << i;
+                continue;
+            }
             url.setPath(path);
             // Retry until the user selects a working application, or aborts
-            tryOpenDocumentWithDialog(url);
+            while ( ! tryOpenDocument(url) ) {
+                SelectEditorDialog dlg;
+                if ( ! dlg.exec() ) {
+                    break;
+                }
+            }
         }
     }
-
     tube->setProperty("accountPath", account->objectPath());
     m_channels.append(tube);
     emit connected();
-
-    // Notify that we should now watch this directory, for when files are added later on
-    ensureNotifierModuleLoaded();
-    url.setPath("/");
-    kDebug() << "emitting entered URL" << url;
-    OrgKdeKDirNotifyInterface::emitEnteredDirectory(url.url());
 }
 
 InfTubeClient::~InfTubeClient()

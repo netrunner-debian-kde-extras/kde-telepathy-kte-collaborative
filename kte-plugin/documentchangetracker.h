@@ -81,12 +81,6 @@ public slots:
      */
     QString userForCursor(const KTextEditor::Cursor& position) const;
 
-signals:
-    /**
-     * @brief Emitted when the used colors change in some way.
-     */
-    void colorTableChanged();
-
 private:
     /**
      * @brief Finds empty ranges in m_ranges and deletes them.

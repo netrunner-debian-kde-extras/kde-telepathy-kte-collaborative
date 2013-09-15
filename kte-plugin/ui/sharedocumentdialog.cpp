@@ -20,7 +20,6 @@
  */
 
 #include "sharedocumentdialog.h"
-#include "opencollabdocumentdialog.h"
 
 #include <ktpintegration/inftube.h>
 #include <KTp/Widgets/join-chat-room-dialog.h>
@@ -31,8 +30,6 @@
 #include <KTextEditor/Document>
 #include <KMessageWidget>
 #include <KIO/Job>
-#include <KPushButton>
-#include <KFileDialog>
 
 #include <QLayout>
 #include <QCommandLinkButton>
@@ -56,9 +53,7 @@ ShareDocumentDialog::ShareDocumentDialog(KTextEditor::View* activeView)
     infobox->setCloseButtonVisible(false);
     infobox->setMessageType(KMessageWidget::Information);
     infobox->setWordWrap(true);
-#if KDE_VERSION_MAJOR == 4 && KDE_VERSION_MINOR >= 11 || KDE_VERSION_MAJOR > 4
     infobox->setIcon(KIcon("help-about"));
-#endif
     infobox->setText(i18n("<p>You can select a contact or chatroom to share this document with below.</p>"
                           "<p>Since each such connection to a contact or chatroom can contain "
                           "an arbitrary number of documents, you can also add this document "
@@ -72,11 +67,8 @@ ShareDocumentDialog::ShareDocumentDialog(KTextEditor::View* activeView)
     shareContactButton->setIcon(KIcon("im-user"));
     QCommandLinkButton* shareChatRoomButton = new QCommandLinkButton(i18n("Share document with chat room"));
     shareChatRoomButton->setIcon(KIcon("resource-group"));
-    QCommandLinkButton* shareExistingServerButton = new QCommandLinkButton(i18n("Upload document to an existing server"));
-    shareExistingServerButton->setIcon(KIcon("applications-internet"));
     newConnectionBox->layout()->addWidget(shareContactButton);
     newConnectionBox->layout()->addWidget(shareChatRoomButton);
-    newConnectionBox->layout()->addWidget(shareExistingServerButton);
     w->layout()->addWidget(newConnectionBox);
 
     QGroupBox* addToExistingBox = new QGroupBox();
@@ -89,7 +81,6 @@ ShareDocumentDialog::ShareDocumentDialog(KTextEditor::View* activeView)
 
     connect(shareContactButton, SIGNAL(clicked(bool)), SLOT(shareWithContact()));
     connect(shareChatRoomButton, SIGNAL(clicked(bool)), SLOT(shareWithChatRoom()));
-    connect(shareExistingServerButton, SIGNAL(clicked(bool)), SLOT(putOnExistingServer()));
     connect(connections, SIGNAL(connectionClicked(uint,QString)),
             this, SLOT(shareWithExistingConnection(uint,QString)));
 
@@ -124,31 +115,6 @@ void ShareDocumentDialog::shareWithExistingConnection(uint port, QString nicknam
     connect(job, SIGNAL(finished(KJob*)), SLOT(jobFinished(KJob*)));
 }
 
-void ShareDocumentDialog::putOnExistingServer()
-{
-    KDialog serverParametersDialog;
-    serverParametersDialog.button(KDialog::Ok)->setText(i18n("Connect"));
-    HostSelectionWidget* w = new HostSelectionWidget;
-    serverParametersDialog.setMainWidget(w);
-    serverParametersDialog.resize(450, 200);
-    if ( serverParametersDialog.exec() ) {
-        foreach ( QWidget* w, findChildren<QWidget*>() ) {
-            w->setDisabled(true);
-        }
-        KUrl result = KFileDialog::getSaveUrl(w->selectedUrl());
-        if ( result.isValid() ) {
-            KIO::FileCopyJob* copyJob = KIO::file_copy(m_view->document()->url(), result);
-            connect(copyJob, SIGNAL(finished(KJob*)), SLOT(jobFinished(KJob*)));
-        }
-        else {
-            reject();
-        }
-    }
-    else {
-        reject();
-    }
-}
-
 void ShareDocumentDialog::shareWithContact()
 {
     KTp::ContactGridDialog dialog(this);
@@ -164,11 +130,11 @@ void ShareDocumentDialog::shareWithContact()
                     this, SIGNAL(shouldOpenDocument(KUrl)));
         }
         else {
-            reject();
+            accept();
         }
     }
     else {
-        reject();
+        accept();
     }
 }
 

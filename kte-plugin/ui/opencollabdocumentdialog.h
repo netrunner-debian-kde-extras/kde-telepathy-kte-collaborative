@@ -1,5 +1,6 @@
 /*
- * Copyright 2013 Sven Brauch <svenbrauch@gmail.com>
+ * <one line to give the library's name and an idea of what it does.>
+ * Copyright 2013  Sven Brauch <svenbrauch@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -23,30 +24,10 @@
 #define OPENCOLLABDOCUMENTDIALOG_H
 
 #include <KDialog>
-#include <QGroupBox>
 
 class KMessageWidget;
 class QFormLayout;
 class KLineEdit;
-
-class HostSelectionWidget : public QGroupBox {
-Q_OBJECT
-public:
-    HostSelectionWidget(QWidget* parent = 0);
-    KUrl selectedUrl() const;
-
-private slots:
-    void showTip();
-    void showAdvanced(bool);
-
-private:
-    KLineEdit* m_password;
-    KLineEdit* m_userName;
-    KLineEdit* m_port;
-    KLineEdit* m_host;
-    QFormLayout* m_advancedSettingsLayout;
-    KMessageWidget* m_tip;
-};
 
 class OpenCollabDocumentDialog : public KDialog
 {
@@ -58,21 +39,23 @@ public:
      * @brief The URL the user has selected to open a document from. Only valid after the dialog was accepted.
      */
     KUrl selectedBaseUrl() const;
-    virtual void accept();
-
-signals:
-    void shouldOpenDocument(const KUrl&);
 
 public slots:
     void connectionClicked(uint,QString);
-    void acceptedWithManualConnection();
+    void showAdvanced(bool);
 
 private slots:
-    void requestFileToOpen();
+    void showTip();
 
 private:
+    KLineEdit* m_password;
+    KLineEdit* m_userName;
+    KLineEdit* m_port;
+    KLineEdit* m_host;
+    QFormLayout* m_advancedSettingsLayout;
+    KMessageWidget* m_tip;
+
     QPair<unsigned int, QString> m_selectedConnection;
-    HostSelectionWidget* m_manualSelectionWidget;
 };
 
 #endif // OPENCOLLABDOCUMENTDIALOG_H

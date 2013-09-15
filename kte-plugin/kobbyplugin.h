@@ -44,7 +44,7 @@
 
 using namespace Kobby;
 
-class KteCollaborativePluginView;
+class KobbyPluginView;
 
 /**
  * @brief The main class of the project, a plugin to KTextEditor.
@@ -53,15 +53,15 @@ class KteCollaborativePluginView;
  * and what views the plugin UI should be added to. All other things
  * should be managed in the appropriate other classes.
  */
-class KteCollaborativePlugin : public KTextEditor::Plugin {
+class KobbyPlugin : public KTextEditor::Plugin {
 Q_OBJECT
 public:
     /**
      * @brief Constructor, only to be used internally.
      */
-    explicit KteCollaborativePlugin( QObject *parent = 0,
+    explicit KobbyPlugin( QObject *parent = 0,
                           const QVariantList &args = QVariantList() );
-    virtual ~KteCollaborativePlugin();
+    virtual ~KobbyPlugin();
 
     /**
      * @brief Called when a new view is created for a document
@@ -200,10 +200,10 @@ private:
     // the connection name is host:port, get it with connectionName(url)
     QHash<QString, Kobby::Connection*> m_connections;
     // Maps KTextEditor::View instances to KobbyPluginView instances.
-    QMap<KTextEditor::View*, KteCollaborativePluginView*> m_views;
+    QMap<KTextEditor::View*, KobbyPluginView*> m_views;
 };
 
-K_PLUGIN_FACTORY_DECLARATION(KteCollaborativePluginFactory)
+K_PLUGIN_FACTORY_DECLARATION(KobbyPluginFactory)
 
 #endif // _KOBBY_PLUGIN_H_
 

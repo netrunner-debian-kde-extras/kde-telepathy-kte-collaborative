@@ -36,7 +36,8 @@ Connection::Connection( const QString &hostname,
     const QString& name_,
     QObject *parent)
     : QObject( parent )
-    , m_host( hostname, port )
+    , m_hostname( hostname )
+    , m_port( port )
     , m_name( name_ )
     , m_connectionStatus(QInfinity::XmlConnection::Closed)
     , m_tcpConnection( 0 )
@@ -59,7 +60,7 @@ void Connection::prepare()
         emit ready( this );
     }
     else {
-        QHostInfo::lookupHost( m_host.hostname, this,
+        QHostInfo::lookupHost( m_hostname, this,
             SLOT(slotHostnameLookedUp(const QHostInfo&)) );
     }
 }
@@ -85,7 +86,6 @@ QInfinity::XmppConnection *Connection::xmppConnection() const
 
 void Connection::slotHostnameLookedUp( const QHostInfo &hostInfo )
 {
-    qDebug() << "hostname lookup finished, port:" << m_host.port;
     QList<QHostAddress> addresses = hostInfo.addresses();
     if( addresses.size() == 0 )
     {
@@ -94,13 +94,13 @@ void Connection::slotHostnameLookedUp( const QHostInfo &hostInfo )
     }
 
     m_tcpConnection = new QInfinity::TcpConnection( QInfinity::IpAddress( addresses[0] ),
-        m_host.port,
+        m_port,
         this );
 
     m_xmppConnection = new QInfinity::XmppConnection( *m_tcpConnection,
         QInfinity::XmppConnection::Client,
         "localhost",
-        m_host.hostname,
+        m_hostname,
         QInfinity::XmppConnection::PreferTls,
         0, 0, 0,
         this );
@@ -116,11 +116,6 @@ void Connection::slotHostnameLookedUp( const QHostInfo &hostInfo )
 QInfinity::XmlConnection::Status Connection::status() const
 {
     return m_connectionStatus;
-}
-
-Host Connection::host() const
-{
-    return m_host;
 }
 
 void Connection::slotStatusChanged()

@@ -20,9 +20,9 @@
  */
 
 #include "kcm_kte_collaborative.h"
-#include "ktecollaborativeplugin.h"
+#include "kobbyplugin.h"
 
-#include "common/selecteditorwidget.h"
+#include "ui/selecteditorwidget.h"
 
 #include <KDebug>
 #include <KMessageWidget>
@@ -35,7 +35,7 @@
 #include <QLabel>
 
 KCMKTECollaborative::KCMKTECollaborative(QWidget* parent, const QVariantList& args)
-    : KCModule(KteCollaborativePluginFactory::componentData(), parent, args)
+    : KCModule(KobbyPluginFactory::componentData(), parent, args)
 {
     kDebug() << "creating kte_collaborative kcmodule";
     // Set up config groups
@@ -47,14 +47,14 @@ KCMKTECollaborative::KCMKTECollaborative(QWidget* parent, const QVariantList& ar
     // Create notifications group box
     QGroupBox* notificationsGroupBox = new QGroupBox();
     notificationsGroupBox->setTitle(i18n("Highlights and Notifications"));
-    QVBoxLayout* notificationsLayout = new QVBoxLayout();
+    QFormLayout* notificationsLayout = new QFormLayout();
     notificationsGroupBox->setLayout(notificationsLayout);
-    m_highlightBackground = new QCheckBox(i18n("Display popup widgets"));
-    m_displayWidgets = new QCheckBox(i18n("Colorize text background"));
-    m_displayTextHints = new QCheckBox(i18n("Display text tooltips"));
-    notificationsLayout->addWidget(m_displayWidgets);
-    notificationsLayout->addWidget(m_highlightBackground);
-    notificationsLayout->addWidget(m_displayTextHints);
+    m_highlightBackground = new QCheckBox();
+    m_displayWidgets = new QCheckBox();
+    m_displayTextHints = new QCheckBox();
+    notificationsLayout->addRow(i18n("Display popup widgets"), m_displayWidgets);
+    notificationsLayout->addRow(i18n("Colorize text background"), m_highlightBackground);
+    notificationsLayout->addRow(i18n("Display text tooltips"), m_displayTextHints);
 
     // Create colors group box
     QGroupBox* colorsGroupBox = new QGroupBox();
@@ -111,5 +111,5 @@ void KCMKTECollaborative::save()
     m_notifyGroup.writeEntry("highlightBackground", m_highlightBackground->isChecked());
     m_notifyGroup.writeEntry("displayWidgets", m_displayWidgets->isChecked());
     m_notifyGroup.writeEntry("enableTextHints", m_displayTextHints->isChecked());
-    m_applicationsGroup.writeEntry("editor", m_selectEditorWidget->selectedEntry().command);
+    m_applicationsGroup.writeEntry("editor", m_selectEditorWidget->selectedEntry().first);
 }

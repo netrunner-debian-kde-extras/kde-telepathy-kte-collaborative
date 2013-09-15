@@ -1,5 +1,5 @@
 # Copyright (c) 2013 Sven Brauch <svenbrauch@gmail.com>
-# The common directory (and library) contais functionality which is common to both the KTE plugin and the kioslave.
+# The common directory (and library) contais functionality which is common to both the kobby plugin and the kioslave.
 # Since both need the whole connection and browser stuff, this is a quite large part of the code base.
 
 # Check if KTE is new enough to have the BufferInterface
@@ -13,27 +13,22 @@ endif(HAVE_BUFFERIFACE)
 include_directories(
     ${KDE4_INCLUDES}
     ${LIBQINFINITY_INCLUDES}
-    ${CMAKE_BINARY_DIR}/ktecollaborative
+    ${CMAKE_BINARY_DIR}/kobby
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/common/
 )
 
-set( KTECOLLABORATIVE_COMMON_SRCS
+set(
+    KOBBY_COMMON_SRCS
     connection.cpp
     document.cpp
     itemfactory.cpp
     noteplugin.cpp
     utils.cpp
-    selecteditorwidget.cpp
 )
 
-kde4_add_library(ktecollaborativecommon SHARED ${KTECOLLABORATIVE_COMMON_SRCS})
-set_target_properties( ktecollaborativecommon
-    PROPERTIES
-    VERSION ${KTECOLLAB_VERSION_STRING}
-    SOVERSION ${KTECOLLAB_VERSION_STRING}
-)
-target_link_libraries( ktecollaborativecommon
+kde4_add_library(kobbycommon SHARED ${KOBBY_COMMON_SRCS})
+target_link_libraries( kobbycommon
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KFILE_LIBS}
     ${KDE4_KTEXTEDITOR_LIBS}
@@ -42,4 +37,4 @@ target_link_libraries( ktecollaborativecommon
     ${LIBQINFINITY_LIBRARIES}
 )
 
-install(TARGETS ktecollaborativecommon DESTINATION ${LIB_INSTALL_DIR}/ktecollaborative)
+install(TARGETS kobbycommon DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})

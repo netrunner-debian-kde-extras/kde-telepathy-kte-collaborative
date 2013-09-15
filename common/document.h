@@ -17,7 +17,7 @@
 
 #ifndef KOBBY_DOCUMENT_H
 #define KOBBY_DOCUMENT_H
-#include "ktecollaborative_export.h"
+#include "kobbycommon_export.h"
 
 #include <libqinfinity/abstracttextbuffer.h>
 
@@ -58,8 +58,6 @@ namespace QInfinity
 namespace Kobby
 {
 
-int countUnicodeCharacters(const QString& str);
-
 /**
  * @brief A base class for interacting with Documents.
  *
@@ -70,7 +68,7 @@ int countUnicodeCharacters(const QString& str);
  * If using this class, you must monitor for fatalError, which
  * will notify of deletion of the Document.
  */
-class KTECOLLABORATIVECOMMON_EXPORT Document
+class KOBBYCOMMON_EXPORT Document
     : public QObject
 {
     Q_OBJECT
@@ -170,7 +168,7 @@ class KTECOLLABORATIVECOMMON_EXPORT Document
  * and removal operations.  It is also responsible for maintaining
  * undo/redo stats (insertionCount and undoCount).
  */
-class KTECOLLABORATIVECOMMON_EXPORT KDocumentTextBuffer
+class KOBBYCOMMON_EXPORT KDocumentTextBuffer
     : public QInfinity::AbstractTextBuffer
 {
     Q_OBJECT
@@ -196,7 +194,6 @@ class KTECOLLABORATIVECOMMON_EXPORT KDocumentTextBuffer
         void updateUndoRedoActions();
 
         void checkConsistency();
-        void checkLineEndings();
         void shutdown();
 
     Q_SIGNALS:
@@ -216,14 +213,12 @@ class KTECOLLABORATIVECOMMON_EXPORT KDocumentTextBuffer
             const KTextEditor::Range &range );
         void localTextRemoved( KTextEditor::Document *document,
             const KTextEditor::Range &range, const QString& oldText );
-        void replaceLineEndings();
 
     private:
-        // All offsets are in unicode code points, all cursors are in utf-16 surrogates.
-        KTextEditor::Cursor offsetRelativeTo_kte(const KTextEditor::Cursor& cursor,
-                                                 const unsigned int offset);
-        KTextEditor::Cursor offsetToCursor_kte( unsigned int offset );
+        unsigned int cursorToOffset_inf( const KTextEditor::Cursor &cursor );
+        KTextEditor::Cursor offsetToCursor_inf( unsigned int offset );
         unsigned int cursorToOffset_kte( const KTextEditor::Cursor &cursor );
+        KTextEditor::Cursor offsetToCursor_kte( unsigned int offset );
         void textOpPerformed();
         void resetUndoRedo();
 
@@ -266,7 +261,7 @@ private:
  *
  * Ties local operations/acitons into QInfinity::Session operations.
  */
-class KTECOLLABORATIVECOMMON_EXPORT InfTextDocument
+class KOBBYCOMMON_EXPORT InfTextDocument
     : public Document
 {
     Q_OBJECT
@@ -302,8 +297,6 @@ class KTECOLLABORATIVECOMMON_EXPORT InfTextDocument
         void slotCanUndo( bool enable );
         void slotCanRedo( bool enable );
         void joinSession(const QString& forceUserName = QString());
-        void newUserNameEntered();
-        void joinAborted();
     
     private:
         void synchronize();

@@ -166,11 +166,6 @@ public slots:
      */
     void lookupFailed();
 
-    /**
-     * @brief Invoked when a subscription request fails.
-     */
-    void subscriptionFailed(GError*);
-
 signals:
     /**
      * @brief Emitted when a document is completely synchronized and ready to be used (user can start typing etc).
@@ -183,23 +178,6 @@ signals:
      * @param document The document for which synchronization has begun
      */
     void synchronizationBegins(ManagedDocument* document);
-
-    /**
-     * @brief Emitted when a new sync chunk arrives.
-     * Connecting to this signal is preferable over connecting to the member document's
-     * equivalent signal, since the member is only populated later.
-     * @param percentage Percentage synchronized so far (1.0 is finished)
-     */
-    void synchroinzationProgress(double percentage);
-
-    /**
-     * @brief Emitted when the load state changes.
-     * Connecting to this signal is preferable over connecting to the member document's
-     * equivalent signal, since the member is only populated later.
-     * @param document the document the load state changed on
-     * @param state the new load state
-     */
-    void loadStateChanged(Document*,Document::LoadState);
 
 private:
     Kobby::KDocumentTextBuffer* m_textBuffer;
