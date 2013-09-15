@@ -1,0 +1,23 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<gui name="ktexteditor_kobbyui" library="ktexteditor_kobby" version="9">
+
+<MenuBar>
+  <Menu name="collaborative"><text>&amp;Collaborative</text>
+    <Action name="kobby_share_with_contact"/>
+    <Action name="kobby_open_file_manager"/>
+    <Action name="kobby_disconnect"/>
+    <Separator/>
+    <Action name="kobby_save_copy"/>
+    <Action name="kobby_change_user_name"/>
+    <Separator/>
+    <Action name="kobby_open"/>
+    <Separator/>
+    <Action name="kobby_configure"/>
+  </Menu>
+</MenuBar>
+
+<Menu name="ktexteditor_popup">
+  <Action name="kobby_clear_highlight" group="popup_operations"/>
+</Menu>
+
+</gui>

@@ -1,0 +1,16 @@
+Dependencies:
+    libinfinity
+    libqinfinity (from git://anongit.kde.org/libqinfinity.git)
+    kde-telepathy-common-internals
+
+Installation:
+    mkdir build
+    cd build
+    cmake .. [your cmake flags]
+    make install
+
+Usage:
+    After installing, reboot or kill mission-control-5 and telepathy-gabble, and
+    run kbuildsycoca. Also make sure $KDEDIRS contains your installation prefix.
+    Then, launch any KTextEditor-based application (kate, kwrite, kile, KDevelop, ...)
+    and you should have a "Collaborative" menu. The rest should hopefully be obvious.

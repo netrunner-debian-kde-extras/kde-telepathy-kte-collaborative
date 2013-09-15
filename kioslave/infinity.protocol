@@ -1,0 +1,26 @@
+[Protocol]
+exec=kio_infinity
+protocol=inf
+input=none
+output=filesystem
+listing=Name,Type,Size,Date,Access,Owner,Group,Link,
+reading=true
+writing=true
+makedir=true
+deleting=true
+linking=false
+moving=false
+Icon=folder-remote
+maxInstances=20
+maxInstancesPerHost=1
+Description=Infinity kioslave
+Description[bs]=Beskonačni KIOSlave
+Description[hu]=Infinity kioslave
+Description[nl]=Infinity kioslave
+Description[pt]=Kioslave 'infinity'
+Description[pt_BR]=Kioslave infinity
+Description[sk]=Infinity kioslave
+Description[sv]=Infinity I/O-slav
+Description[uk]=Допоміжний засіб введення-виведення Infinity
+Description[x-test]=xxInfinity kioslavexx
+X-DocPath=kioslave/fish/index.html
