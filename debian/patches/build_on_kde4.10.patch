@@ -1,0 +1,21 @@
+commit e12f88e48f7b255cfae1f1540ed3085a001686ba
+Author: Sven Brauch <svenbrauch@googlemail.com>
+Date:   Thu Aug 29 18:22:24 2013 +0200
+
+    build with KDE < 4.11
+    
+    we just need KMessageWidget::setIcon, which is not enough reason
+    to depend on 4.11.
+
+--- a/kte-plugin/ui/sharedocumentdialog.cpp
++++ b/kte-plugin/ui/sharedocumentdialog.cpp
+@@ -53,7 +53,9 @@
+     infobox->setCloseButtonVisible(false);
+     infobox->setMessageType(KMessageWidget::Information);
+     infobox->setWordWrap(true);
++#if KDE_VERSION_MAJOR == 4 && KDE_VERSION_MINOR >= 11 || KDE_VERSION_MAJOR > 4
+     infobox->setIcon(KIcon("help-about"));
++#endif
+     infobox->setText(i18n("<p>You can select a contact or chatroom to share this document with below.</p>"
+                           "<p>Since each such connection to a contact or chatroom can contain "
+                           "an arbitrary number of documents, you can also add this document "
