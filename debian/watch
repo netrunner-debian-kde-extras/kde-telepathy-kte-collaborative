@@ -1,2 +1,2 @@
 version=3
-http://download.kde.org/unstable/kte-collaborative/([0-9.]+)/src/kte-collaborative-([0-9.]+).tar.xz
+http://download.kde.org/unstable/kte-collaborative/([0-9.]+)/src/kte-collaborative-v?([0-9.]+).tar.xz

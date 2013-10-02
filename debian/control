@@ -14,7 +14,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-kde/kde-extras/kde-telepath
 Package: kte-collaborative
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Collaborative Text Editor for KDE
+Description: Collaborative Text Editor support for KDE
  kte-collaborative treats each file with an URL which uses the inf:// 
  protocol as a collaborative  document. You can thus just open 
  inf://myusername@servername.tld:port/path/to/document.txt in the
