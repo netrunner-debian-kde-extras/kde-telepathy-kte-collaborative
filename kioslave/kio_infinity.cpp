@@ -66,6 +66,8 @@ int KDE_EXPORT kdemain( int argc, char **argv )
         exit(-1);
     }
 
+    ensureNotifierModuleLoaded();
+
     QInfinity::init();
 
     InfinityProtocol slave(argv[2], argv[3]);
@@ -75,19 +77,6 @@ int KDE_EXPORT kdemain( int argc, char **argv )
     return app.exec();
 }
 
-}
-
-void InfinityProtocol::directoryChanged(const QInfinity::BrowserIter iter)
-{
-    QInfinity::BrowserIter copy(iter);
-    if ( copy.parent() && infc_browser_iter_get_explore_request(copy.infBrowser(), copy.infBrowserIter()) ) {
-        kDebug() << "directory is being explored:" << iter.path() << "-- not emitting changed signal";
-        return;
-    }
-    KUrl url("inf://" + m_connectedTo.hostname + ":" + QString::number(m_connectedTo.port) + copy.path());
-    QString dir = url.upUrl().url();
-    kDebug() << "directory changed::" << dir << copy.path();
-    OrgKdeKDirNotifyInterface::emitFilesAdded(dir);
 }
 
 InfinityProtocol::InfinityProtocol(const QByteArray& pool_socket, const QByteArray& app_socket)
@@ -105,6 +94,8 @@ void InfinityProtocol::get(const KUrl& url )
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
+
+    OrgKdeKDirNotifyInterface::emitEnteredDirectory(url.upUrl().url());
 
     bool ok = false;
     iterForUrl(url, &ok);
@@ -130,18 +121,20 @@ void InfinityProtocol::stat(const KUrl& url)
 
     bool ok = false;
     QInfinity::BrowserIter iter = iterForUrl(url, &ok);
-    Q_UNUSED(iter);
     if ( ! ok ) {
         error(KIO::ERR_COULD_NOT_STAT, i18n("Could not stat %1: No such file or directory.", url.url()));
         return;
     }
 
     UDSEntry entry;
-    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
+    if ( ! iter.isDirectory() ) {
+        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
+    }
     entry.insert(KIO::UDSEntry::UDS_NAME, iter.name());
     entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
     entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, iter.name());
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, iter.isDirectory() ? S_IFDIR : S_IFREG);
+    entry.insert(KIO::UDSEntry::UDS_ACCESS, 0x777);
     statEntry(entry);
 
     finished();
@@ -180,7 +173,8 @@ bool InfinityProtocol::doConnect(const Peer& peer)
 
     QTimer timeout;
     timeout.setSingleShot(true);
-    timeout.setInterval(connectTimeout() * 1000);
+    // Give it a bit more time for connecting than usual, our connection method is complicated sometimes
+    timeout.setInterval(connectTimeout() * 1000 * 3);
     connect(&timeout, SIGNAL(timeout()), &loop, SLOT(quit()));
     timeout.start();
     loop.exec();
@@ -203,11 +197,6 @@ bool InfinityProtocol::doConnect(const Peer& peer)
         return false;
     }
 
-    connect(browser(), SIGNAL(nodeAdded(BrowserIter)),
-            this, SLOT(directoryChanged(BrowserIter)), Qt::UniqueConnection);
-    connect(browser(), SIGNAL(nodeRemoved(BrowserIter)),
-            this, SLOT(directoryChanged(BrowserIter)), Qt::UniqueConnection);
-
     m_connectedTo = peer;
     return true;
 }
@@ -229,6 +218,9 @@ void InfinityProtocol::put(const KUrl& url, int /*permissions*/, JobFlags /*flag
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
+
+    OrgKdeKDirNotifyInterface::emitEnteredDirectory(url.upUrl().url());
+
     QByteArray buffer, initialContents;
     int size = 0, bytesRead = 1;
     while ( bytesRead != 0 ) {
@@ -300,6 +292,7 @@ void InfinityProtocol::del(const KUrl& url, bool /*isfile*/)
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
+
     bool itemExists = false;
     QInfinity::BrowserIter iter = iterForUrl(url, &itemExists);
     if ( ! itemExists ) {
@@ -320,6 +313,9 @@ void InfinityProtocol::mkdir(const KUrl& url, int /*permissions*/)
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
+
+    OrgKdeKDirNotifyInterface::emitEnteredDirectory(url.url());
+
     QInfinity::BrowserIter iter = iterForUrl(url.upUrl());
     QInfinity::NodeRequest* req = browser()->addSubdirectory(iter, url.fileName().toAscii().data());
     connect(req, SIGNAL(finished(NodeRequest*)), this, SIGNAL(requestSuccessful(NodeRequest*)));
@@ -355,6 +351,9 @@ QInfinity::BrowserIter InfinityProtocol::iterForUrl(const KUrl& url, bool* ok)
 void InfinityProtocol::listDir(const KUrl &url)
 {
     kDebug() << "LIST DIR" << url;
+
+    OrgKdeKDirNotifyInterface::emitEnteredDirectory(url.url());
+
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
@@ -385,6 +384,7 @@ void InfinityProtocol::listDir(const KUrl &url)
             UDSEntry entry;
             entry.insert( KIO::UDSEntry::UDS_NAME, iter.name() );
             entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, iter.isDirectory() ? S_IFDIR : S_IFREG );
+            entry.insert( KIO::UDSEntry::UDS_ACCESS, 0x777 );
             listEntry(entry, false);
         } while ( iter.next() );
     }

@@ -18,7 +18,7 @@
 
 #ifndef KOBBY_UTILS_H
 #define KOBBY_UTILS_H
-#include "kobbycommon_export.h"
+#include "ktecollaborative_export.h"
 
 #include <QObject>
 #include <QStack>
@@ -26,14 +26,25 @@
 #include <QColor>
 #include <KDebug>
 
-#include <glib.h>
-
 #include <libqinfinity/browser.h>
 #include <libqinfinity/browseriter.h>
 
 namespace KTextEditor {
 class View;
 }
+
+/**
+  * @brief Try to open the given document based on the current configuration in KConfig
+  *
+  * @param url The URL to open
+  * @return bool true if the command could be executed, false otherwise
+  */
+KTECOLLABORATIVECOMMON_EXPORT bool tryOpenDocument(const KUrl& url);
+KTECOLLABORATIVECOMMON_EXPORT bool tryOpenDocumentWithDialog(const KUrl& url);
+
+KTECOLLABORATIVECOMMON_EXPORT bool ensureNotifierModuleLoaded();
+KTECOLLABORATIVECOMMON_EXPORT QString getUserName();
+
 
 // Helper class for finding the BrowserIter for a directory.
 // libinfinity works with documents (or directories) only as "iters",
@@ -49,16 +60,18 @@ class View;
 // operation is fast when it has been done before for the given path (excluding
 // the last entry), and network-slow if it has not (might need to display
 // a busy indicator while it's running).
-class KOBBYCOMMON_EXPORT IterLookupHelper : public QObject {
+class KTECOLLABORATIVECOMMON_EXPORT IterLookupHelper : public QObject {
 Q_OBJECT
 public:
-    IterLookupHelper(QString lookupPath, QInfinity::Browser* browser);
+    IterLookupHelper(QString lookupPath, const QInfinity::Browser* browser);
 
     inline void beginLater() {
         QTimer::singleShot(0, this, SLOT(begin()));
     };
     QInfinity::BrowserIter result() const;
     bool success() const;
+    void setDeleteOnFinish(bool deleteOnFinish = true);
+    void setExploreResult(bool exploreResult = true);
 
 signals:
     void done(QInfinity::BrowserIter found);
@@ -70,18 +83,19 @@ public slots:
         explore(m_currentIter);
     };
     void directoryExplored();
+    void exploreIfDirectory(QInfinity::BrowserIter);
 
 protected:
     void explore(QInfinity::BrowserIter directory);
 
     QStack<QString> m_remainingComponents;
-    QInfinity::Browser* m_browser;
+    const QInfinity::Browser* m_browser;
     QInfinity::BrowserIter m_currentIter;
     bool m_wasSuccessful;
 };
 
 // Helper class for dealing with colors.
-class KOBBYCOMMON_EXPORT ColorHelper {
+class KTECOLLABORATIVECOMMON_EXPORT ColorHelper {
 public:
     /**
      * @brief YUV "Y" value of the given color, between 255 (very light) and 0 (very dark).

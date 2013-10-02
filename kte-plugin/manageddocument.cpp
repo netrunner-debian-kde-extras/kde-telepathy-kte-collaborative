@@ -32,6 +32,8 @@
 #include <libqinfinity/xmlconnection.h>
 #include <libqinfinity/xmppconnection.h>
 #include <libqinfinity/usertable.h>
+#include <libqinfinity/noderequest.h>
+#include <libqinfinity/noteplugin.h>
 
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -121,6 +123,8 @@ void ManagedDocument::unsubscribe()
         m_infDocument->leave();
         m_infDocument->deleteLater();
         m_infDocument = 0;
+    }
+    if ( m_textBuffer ) {
         m_textBuffer->shutdown();
         m_textBuffer = 0;
     }
@@ -143,6 +147,7 @@ void ManagedDocument::subscribe()
             this, SLOT(finishSubscription(QInfinity::BrowserIter)));
     connect(helper, SIGNAL(failed()),
             this, SLOT(lookupFailed()));
+    helper->setDeleteOnFinish(true);
     helper->begin();
 }
 
@@ -158,6 +163,7 @@ void ManagedDocument::lookupFailed()
         unsubscribe();
         KMessageBox::error(document()->widget(),
                            i18n("Failed to open file %1, make sure it exists.", document()->url().url()));
+        document()->closeUrl();
     }
     m_connectionRetries += 1;
 }
@@ -172,6 +178,8 @@ void ManagedDocument::subscriptionDone(QInfinity::BrowserIter iter, QPointer< QI
     m_proxy = proxy;
     QObject::connect(proxy->session(), SIGNAL(statusChanged()),
                      this, SLOT(sessionStatusChanged()));
+    QObject::connect(proxy->session(), SIGNAL(progress(double)),
+                     this, SIGNAL(synchroinzationProgress(double)));
     QInfinity::TextSession* textSession = dynamic_cast<QInfinity::TextSession*>(proxy->session().data());
     m_infDocument = new Kobby::InfTextDocument(proxy.data(), textSession,
                                                m_textBuffer, document()->documentName());
@@ -179,6 +187,8 @@ void ManagedDocument::subscriptionDone(QInfinity::BrowserIter iter, QPointer< QI
             this, SLOT(unrecoverableError(Document*,QString)));
     connect(m_infDocument, SIGNAL(loadingComplete(Document*)),
             this, SLOT(synchronizationComplete(Document*)));
+    connect(m_infDocument, SIGNAL(loadStateChanged(Document*,Document::LoadState)),
+            this, SIGNAL(loadStateChanged(Document*,Document::LoadState)));
     m_textBuffer->setSession(proxy->session());
     emit synchronizationBegins(this);
 }
@@ -186,22 +196,25 @@ void ManagedDocument::subscriptionDone(QInfinity::BrowserIter iter, QPointer< QI
 void ManagedDocument::unrecoverableError(Document* document, QString error)
 {
     Q_ASSERT(document == m_infDocument);
-    if ( document->kDocument() ) {
+    if ( m_document ) {
         QTemporaryFile file;
         file.setAutoRemove(false);
         file.open();
         file.close();
-        document->kDocument()->saveAs(KUrl(file.fileName()));
-        if ( ! error.isEmpty() ) {
-            // We must not use exec() here (so no KMessageBox!) or we will run into
-            // nested-event-loop-network-code trouble.
-            KDialog* dlg = new KDialog();
-            dlg->setMainWidget(new QLabel(i18n("Error opening document: %1", error)));
-            dlg->setButtons(KDialog::Cancel);
-            dlg->button(KDialog::Cancel)->setText(i18n("Disconnect"));
-            dlg->setAttribute(Qt::WA_DeleteOnClose);
-            dlg->show();
-        }
+        m_document->saveAs(KUrl(file.fileName()));
+    }
+    if ( ! error.isEmpty() ) {
+        // We must not use exec() here (so no KMessageBox!) or we will run into
+        // nested-event-loop-network-code trouble.
+        KDialog* dlg = new KDialog();
+        dlg->setCaption(i18n("Collaborative text editing"));
+        QLabel* message = new QLabel(error);
+        message->setWordWrap(true);
+        dlg->setMainWidget(message);
+        dlg->setButtons(KDialog::Cancel);
+        dlg->button(KDialog::Cancel)->setText(i18n("Disconnect"));
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
+        dlg->show();
     }
 }
 
@@ -235,20 +248,39 @@ void ManagedDocument::sessionStatusChanged()
 {
     m_sessionStatus = m_proxy->session()->status();
     kDebug() << "session status changed to " << m_proxy->session()->status() << "on" << document()->url();
+    if ( m_sessionStatus == Session::Closed ) {
+        kDebug() << "Session was closed, disconnecting.";
+        unrecoverableError(infTextDocument(),
+                           i18n("The session for <br><b>%1</b><br> was closed by the remote host, "
+                                "possibly the file you were editing was deleted by someone.", document()->url().url()));
+    }
+}
+
+void ManagedDocument::subscriptionFailed(GError* error)
+{
+    unrecoverableError(infTextDocument(), error->message);
 }
 
 void ManagedDocument::finishSubscription(QInfinity::BrowserIter iter)
 {
-    // delete the lookup helper
-    QObject::sender()->deleteLater();
     kDebug() << "finishing subscription with iter " << iter.path();
+    if ( iter.isDirectory() ) {
+        unrecoverableError(infTextDocument(), i18n("The URL you tried to open is a directory, not a document."));
+        return;
+    }
+    if ( iter.noteType() != QString::fromAscii(m_notePlugin->infPlugin()->note_type) ) {
+        unrecoverableError(infTextDocument(), i18n("The document type \"%1\" is not supported by this program.",
+                                                   iter.noteType()));
+        return;
+    }
     QPointer< QInfinity::Browser > browser = iter.browser();
     QObject::connect(browser.data(), SIGNAL(subscribeSession(QInfinity::BrowserIter,QPointer<QInfinity::SessionProxy>)),
                      this, SLOT(subscriptionDone(QInfinity::BrowserIter,QPointer<QInfinity::SessionProxy>)), Qt::UniqueConnection);
     m_textBuffer = new Kobby::KDocumentTextBuffer(document(), "utf-8");
     kDebug() << "created text buffer";
     m_iterId = iter.id();
-    browser->subscribeSession(iter, m_notePlugin, m_textBuffer);
+    NodeRequest* req = browser->subscribeSession(iter, m_notePlugin, m_textBuffer);
+    connect(req, SIGNAL(failed(GError*)), this, SLOT(subscriptionFailed(GError*)));
 }
 
 #include "manageddocument.moc"
