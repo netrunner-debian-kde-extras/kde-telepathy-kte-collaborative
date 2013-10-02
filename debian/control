@@ -15,13 +15,10 @@ Package: kte-collaborative
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Collaborative Text Editor support for KDE
- kte-collaborative treats each file with an URL which uses the inf:// 
- protocol as a collaborative  document. You can thus just open 
- inf://myusername@servername.tld:port/path/to/document.txt in the
- editor, and the plugin should connect you to the session. You can also 
- use the File -> Open dialog  to select the document after entering the
- base URL. Alternatively, you can use Collaborative -> Open collaborative
- document for a nice GUI for entering connection parameters.
- You can also use Telepathy to establish pseudo peer-to-peer connections 
+ kte-collaborative provides a KIO and Kate plugin to access infinote
+ files. You can open files directly as
+ inf://myusername@servername.tld:port/path/to/document.txt or
+ you can browse infinote servers using the KDE file dialog or file managers.
+ .
+ You can also use Telepathy to establish pseudo peer-to-peer connections
  to jabber contacts from the same menu.
-
