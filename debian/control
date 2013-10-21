@@ -1,7 +1,8 @@
 Source: kte-collaborative
 Section: kde
 Priority: extra
-Maintainer: Diane Trout <diane@ghic.org>
+Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
+Uploaders: Diane Trout <diane@ghic.org>
 Build-Depends: debhelper (>= 9), cmake, pkg-kde-tools,
  kdelibs5-dev (>= 4:4.5.0),
  libtelepathy-qt4-dev( >= 0.8.9),
