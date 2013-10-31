@@ -1,0 +1,631 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Balázs Úr <urbalazs@gmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2013-10-14 01:56+0000\n"
+"PO-Revision-Date: 2013-10-25 19:15+0200\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Úr Balázs"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "urbalazs@gmail.com"
+
+#: common/document.cpp:308
+msgid ""
+"Sorry, an internal error occurred in the text synchronization component."
+"<br>You can try to reload the document or disconnect."
+msgstr ""
+"Elnézést, egy belső hiba történt a szöveg szinkronizációs komponensben."
+"<br>Megpróbálhatja újratölteni a dokumentumot vagy leválasztani."
+
+#: common/document.cpp:312
+msgid "Reload document"
+msgstr "Dokumentum újratöltése"
+
+#: common/document.cpp:313 kte-plugin/ktecollaborativepluginview.cpp:385
+#: kte-plugin/manageddocument.cpp:215
+msgid "Disconnect"
+msgstr "Kapcsolat bontása"
+
+#: common/document.cpp:509 common/selecteditorwidget.cpp:121
+msgid "Continue"
+msgstr "Folytatás"
+
+#: common/document.cpp:510
+msgid ""
+"The document you opened contains non-standard line endings. Do you want to "
+"convert them to the standard \"\\n\" format?<br><br><i>Note: This change "
+"will be synchronized to the server.</i>"
+msgstr ""
+"A megnyitott dokumentum nem szabványos sorvége jeleket tartalmaz. Szeretné "
+"átalakítani őket a szabványos „\\n” formátumra?<br><br><i>Megjegyzés: ez a "
+"módosítás szinkronizálva lesz a kiszolgálóra.</i>"
+
+#: common/document.cpp:633
+msgid "Synchronization Failed: "
+msgstr "Szinkronizálás meghiúsult:"
+
+#: common/document.cpp:661
+msgid "Could not join session: "
+msgstr "Nem sikerült csatlakozni a munkamenethez: "
+
+#: common/document.cpp:677
+msgid "Retry"
+msgstr "Újra"
+
+#: common/document.cpp:681
+#, kde-format
+msgid "Failed to join editing session: %1"
+msgstr "Nem sikerült csatlakozni a szerkesztő munkamenethez: %1"
+
+#: common/document.cpp:682
+msgid "You can try joining again with a different user name:"
+msgstr "Megpróbálhat újra csatlakozni egy másik felhasználónévvel:"
+
+#: common/document.cpp:684
+msgid "Enter your user name..."
+msgstr "Adja meg a felhasználónevét…"
+
+#: common/document.cpp:694
+msgid "No acceptable user name was given."
+msgstr "Nem elfogadható felhasználónév lett megadva."
+
+#: common/selecteditorwidget.cpp:42
+msgid "Display folder in Dolphin"
+msgstr "Mappa megjelenítése a Dolphinban"
+
+#: common/selecteditorwidget.cpp:43
+#, kde-format
+msgid "Start %1"
+msgstr "%1 indítása"
+
+#: common/selecteditorwidget.cpp:44 common/selecteditorwidget.cpp:45
+#: common/selecteditorwidget.cpp:46 common/selecteditorwidget.cpp:47
+#, kde-format
+msgid "Open in %1"
+msgstr "Megnyitás ebben: %1"
+
+#: common/selecteditorwidget.cpp:69
+#, kde-format
+msgctxt "%1 is an application name"
+msgid "The application \"%1\" is not installed on your computer."
+msgstr "A „%1” alkalmazás nincs telepítve a számítógépére."
+
+#: common/selecteditorwidget.cpp:92
+msgid "What action should be taken for collaborative documents by default?"
+msgstr ""
+"Milyen művelet legyen alapértelmezetten elvégezve az együttműködő "
+"dokumentumokhoz?"
+
+#: common/selecteditorwidget.cpp:114
+msgid ""
+"It seems you are trying to open a collaborative document for the first time."
+msgstr ""
+"Úgy tűnik, hogy együttműködő dokumentumot próbál megnyitni első alkalommal."
+
+#: common/selecteditorwidget.cpp:122
+msgid "Cancel and reject document"
+msgstr "Dokumentum megszakítása és elutasítása"
+
+#: kioslave/kio_infinity.cpp:103
+#, kde-format
+msgid "Could not get %1: The node does not exist."
+msgstr "Nem sikerült lekérni: %1. A csomópont nem létezik."
+
+#: kioslave/kio_infinity.cpp:125
+#, kde-format
+msgid "Could not stat %1: No such file or directory."
+msgstr "Nem érhető el: %1. Nincs ilyen fájl vagy könyvtár."
+
+#: kioslave/kio_infinity.cpp:299
+#, kde-format
+msgid "Cannot delete %1: No such file or directory"
+msgstr "Nem törölhető: %1. Nincs ilyen fájl vagy könyvtár"
+
+#: kioslave/kio_infinity.cpp:418
+msgid "Connection timed out."
+msgstr "A kapcsolat túllépte az időkorlátot."
+
+#: kte-plugin/documentchangetracker.cpp:85
+msgctxt "Refers to a person which is not known"
+msgid "unknown user"
+msgstr "ismeretlen felhasználó"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:62
+#: kte-plugin/ktecollaborativeplugin.cpp:64
+msgid "Collaborative Editing"
+msgstr "Együttműködő szerkesztés"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:67
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:30
+#: kte-plugin/ktpintegration/servertubehandler.cpp:30
+msgid "Sven Brauch"
+msgstr "Sven Brauch"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:68
+msgid "KTextEditor plugin, Telepathy integration, making stuff work"
+msgstr "KTextEditor bővítmény, Telepathy integráció, dolgok működővé tétele"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:71
+msgid "Gregory Haynes"
+msgstr "Gregory Haynes"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:72
+msgid "Original author of kobby, which this application is based off"
+msgstr "A kobby eredeti szerzője, amelyen ez az alkalmazás alapul"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:75
+msgid "David Edmundson"
+msgstr "David Edmundson"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:76
+msgid "Google Summer of Code mentor for this project"
+msgstr "Google Summer of Code mentor ehhez a projekthez"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:79
+msgid "Armin Burgmeier"
+msgstr "Armin Burgmeier"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:80
+msgid "Author of libinfinity"
+msgstr "A libinfinity szerzője"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:84
+msgid "Show offline users"
+msgstr "Kilépett felhasználók megjelenítése"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:87
+msgid "Show users without contributions"
+msgstr "Felhasználók megjelenítése közreműködések nélkül"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:214
+#, kde-format
+msgctxt "tells how many users are online"
+msgid "%1 users (%2 online)"
+msgstr "%1 felhasználó (%2 elérhető)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:220
+msgid "Users:"
+msgstr "Felhasználók:"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:226
+#, kde-format
+msgctxt "%1 is your name"
+msgid "%1 (you)"
+msgstr "%1 (Ön)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:227
+#, kde-format
+msgctxt "%1 is a name"
+msgid "%1 (offline)"
+msgstr "%1 (kilépett)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:295
+msgid "Disconnected from collaboration server."
+msgstr "Leválasztva az együttműködő kiszolgálóról."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:300
+#: kte-plugin/ui/statusoverlay.cpp:96
+msgid "Connecting..."
+msgstr "Csatlakozás…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:303
+msgid "Synchronizing document..."
+msgstr "Dokumentum szinkronizálása…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:306
+msgid "Disconnecting..."
+msgstr "Kapcsolat bontása…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:325
+msgid "Connected to collaboration server."
+msgstr "Csatlakozva az együttműködő kiszolgálóhoz."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:353
+msgid "Open collaborative document..."
+msgstr "Együttműködő dokumentum megnyitása…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:354
+msgid "Open a collaborative document from a manually specified server"
+msgstr "Együttműködő dokumentum megnyitása egy kézzel megadott kiszolgálóról"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:359
+msgid "Save a local copy..."
+msgstr "Helyi másolat mentése…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:360
+msgid ""
+"Save a local copy of the current document, but continue synchronizing changes"
+msgstr ""
+"A jelenlegi dokumentum helyi másolatának mentése, de a változtatások "
+"szinkronizálásának folytatása"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:366
+msgid "Show shared documents folder"
+msgstr "Megosztott dokumentumok mappa megjelenítése"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:371
+msgid "Share document..."
+msgstr "Dokumentum megosztása…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:372
+msgid ""
+"Collaboratively edit the current document with an instant messenger contact"
+msgstr ""
+"A jelenlegi dokumentum együttműködő szerkesztése egy azonnali üzenet "
+"partnerrel"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:379
+msgid "Change user name..."
+msgstr "Felhasználónév módosítása…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:380
+msgid "Change your user name for the current document"
+msgstr "Felhasználónév módosítása a jelenlegi dokumentumhoz"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:386
+msgid ""
+"Disconnect from the collaborative server, and stop synchronizing changes to "
+"the document"
+msgstr ""
+"Leválasztás az együttműködő kiszolgálóról és a dokumentum módosítások "
+"szinkronizálásának leállítása"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:393
+msgid "Clear user highlights"
+msgstr "Felhasználó kiemelések törlése"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:398
+msgid "Configure..."
+msgstr "Beállítás…"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:484
+#, kde-format
+msgctxt "%1 is a user name"
+msgid "Written by: <b>%1</b>"
+msgstr "Készítette: <b>%1</b>"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:552
+msgid ""
+"You cannot change your user name for a document you are not subscribed to."
+msgstr ""
+"Nem változtathatja meg a felhasználónevét olyan dokumentumnál, amelyre nincs "
+"feliratkozva."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:556
+msgid "Change user name"
+msgstr "Felhasználónév módosítása"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:561
+msgid "Enter your new user name:"
+msgstr "Adja meg az új felhasználónevét:"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:610
+#, kde-format
+msgid "Failed to save file to %1"
+msgstr "Nem sikerült a fájl mentése ide: %1"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:618
+msgid ""
+"You must save the document before sharing it. Do you want to do that now?"
+msgstr ""
+"El kell mentenie a dokumentumot, mielőtt megosztaná. Szeretné ezt most "
+"megtenni?"
+
+#. i18n: ectx: Menu (collaborative)
+#: kte-plugin/ktexteditor_collaborativeui.rc:5
+msgid "&Collaborative"
+msgstr "&Együttműködő"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:28
+msgid "infinote-client"
+msgstr "infinote-kliens"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:28
+#: kte-plugin/ktpintegration/servertubehandler.cpp:28
+msgid "Helper application for collaborative editing"
+msgstr "Segítő alkalmazás az együttműködő szerkesztéshez"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:29
+#: kte-plugin/ktpintegration/servertubehandler.cpp:29
+msgid "(C) 2013 Sven Brauch"
+msgstr "© Sven Brauch, 2013."
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:103
+msgid "Type"
+msgstr "Típus"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:106
+msgid "Peer"
+msgstr "Partner"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:109
+msgid "Port"
+msgstr "Port"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:138
+msgid "Contact"
+msgstr "Partner"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:141
+msgid "Chatroom"
+msgstr "Csevegőszoba"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:144
+msgid "unknown"
+msgstr "ismeretlen"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:202
+msgid "No active connections."
+msgstr "Nincsenek aktív kapcsolatok."
+
+#: kte-plugin/ktpintegration/inftube-old.cpp:176
+#, kde-format
+msgid ""
+"Failed to establish a connection to the selected contact. Error message was: "
+"\"%1\""
+msgstr ""
+"Nem sikerült kapcsolatot létesíteni a kijelölt partnerrel. A hibaüzenet: „%1”"
+
+#: kte-plugin/ktpintegration/inftube.cpp:199
+#, kde-format
+msgid "Failed to share file: %1"
+msgstr "Nem sikerült megosztani a fájlt: %1"
+
+#: kte-plugin/ktpintegration/inftube.cpp:214
+#, kde-format
+msgid ""
+"Did not get a valid channel object from Telepathy. Check your installation."
+"<br>Error message was: <b>%1</b>"
+msgstr ""
+"Nem sikerült érvényes csatornaobjektumot lekérni a Telepathy programtól. "
+"Ellenőrizze a telepítését.<br>A hibaüzenet ez volt: <b>%1</b>"
+
+#: kte-plugin/ktpintegration/inftube.cpp:335
+msgid ""
+"Failed to start collaborative server, the session could not be initiated."
+msgstr ""
+"Nem sikerült elindítani az együttműködő kiszolgálót, a munkamenetet nem "
+"sikerült előkészíteni."
+
+#: kte-plugin/ktpintegration/inftube.cpp:336
+#, kde-format
+msgctxt "%1: directory"
+msgid "Look at the log files in %1 for more information."
+msgstr "Naplófájlok megvizsgálása a(z) %1 helyen a további információkért."
+
+#: kte-plugin/ktpintegration/servertubehandler.cpp:28
+msgid "infinoteServer"
+msgstr "infinoteKiszolgáló"
+
+#: kte-plugin/manageddocument.cpp:165
+#, kde-format
+msgid "Failed to open file %1, make sure it exists."
+msgstr ""
+"Nem sikerült megnyitni a(z) %1 fájlt, győződjön meg arról, hogy létezik-e."
+
+#: kte-plugin/manageddocument.cpp:210
+msgid "Collaborative text editing"
+msgstr "Együttműködő szövegszerkesztés"
+
+#: kte-plugin/manageddocument.cpp:254
+#, kde-format
+msgid ""
+"The session for <br><b>%1</b><br> was closed by the remote host, possibly "
+"the file you were editing was deleted by someone."
+msgstr ""
+"A(z) <br><b>%1</b><br> munkamenetet lezárta a távoli gép, valószínűleg a "
+"szerkesztett fájlt letörölte valaki."
+
+#: kte-plugin/manageddocument.cpp:268
+msgid "The URL you tried to open is a directory, not a document."
+msgstr "Az URL, amelyet megpróbált megnyitni, egy könyvtár, nem dokumentum."
+
+#: kte-plugin/manageddocument.cpp:272
+#, kde-format
+msgid "The document type \"%1\" is not supported by this program."
+msgstr "A(z) „%1” dokumentumtípust nem támogatja ez a program."
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:49
+msgid "Highlights and Notifications"
+msgstr "Kiemelések és értesítések"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:52
+msgid "Display popup widgets"
+msgstr "Felugró felületi elemek megjelenítése"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:53
+msgid "Colorize text background"
+msgstr "Szöveges háttér színezése"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:54
+msgid "Display text tooltips"
+msgstr "Szöveges buboréksúgók megjelenítése"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:61
+msgid "Colors"
+msgstr "Színek"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:66
+msgid "Highlight saturation"
+msgstr "Kiemelés telítettség"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:70
+msgid "Default application"
+msgstr "Alapértelmezett alkalmazás"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:77
+msgid "Some changes might only be applied for newly opened documents."
+msgstr ""
+"Néhány változtatás csak az újonnan megnyitott dokumentumokra lesz alkalmazva."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:37
+msgid "Manually enter connection parameters"
+msgstr "Kézzel adja meg a kapcsolat paramétereit"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:41
+msgctxt "Examples for possible hostname formats"
+msgid "e.g. 46.4.96.250, localhost, or mydomain.com"
+msgstr "például 46.4.96.250, localhost, vagy mydomain.com"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:44
+msgid "The name you want to appear with in the session"
+msgstr "Az a név, amelyet meg szeretne jeleníteni a munkamenetben"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:46
+msgid "Leave blank if not required by the server"
+msgstr "Hagyja üresen, ha a kiszolgáló nem igényli"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:53
+msgid ""
+"If you want to save a set of manually entered parameters for later, just add "
+"a bookmark in the file dialog which opens after entering the parameters. "
+"When you want to re-use them, just select File -> Open and click the "
+"bookmark."
+msgstr ""
+"Ha el szeretné menteni a kézzel megadott paraméterek halmazát későbbre, "
+"akkor adjon hozzá egy könyvjelzőt a fájl párbeszédablakban, amely a "
+"paraméterek megadása után nyílik meg. Ha ismét használni szeretné azokat, "
+"válassza a Fájl -> Megnyitás menüt és kattintson a könyvjelzőre."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:58
+msgid "Remote host address:"
+msgstr "Távoli gép címe:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:59
+msgid "Advanced..."
+msgstr "Speciális…"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:91
+msgid "Choose an existing telepathy-based connection"
+msgstr "Válasszon egy létező telepathy-alapú kapcsolatot"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:94
+msgid "Click a connection to open a document from there."
+msgstr ""
+"Kattintson egy kapcsolatra egy dokumentum megnyitásához arról a helyről."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:120
+msgid "Port:"
+msgstr "Port:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:121
+msgid "User name:"
+msgstr "Felhasználónév:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:122
+msgid "Password (optional):"
+msgstr "Jelszó (opcionális):"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:62
+msgid ""
+"<p>You can select a contact or chatroom to share this document with below.</"
+"p><p>Since each such connection to a contact or chatroom can contain an "
+"arbitrary number of documents, you can also add this document to an existing "
+"connection.</p>"
+msgstr ""
+"<p>Lent választhat egy partnert vagy csevegőszobát, akivel megosztja ezt a "
+"dokumentumot.</p><p>Mivel minden ilyen kapcsolat egy partnerhez vagy "
+"csevegőszobához tartalmazhat tetszőleges számú dokumentumot, ezért "
+"hozzáadhatja ezt a dokumentumot egy meglévő kapcsolathoz is.</p>"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:69
+msgid "Create a new connection"
+msgstr "Új kapcsolat létrehozása"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:71
+msgid "Share document with contact"
+msgstr "Dokumentum megosztása egy partnerrel"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:73
+msgid "Share document with chat room"
+msgstr "Dokumentum megosztása a csevegőszobával"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:75
+msgid "Upload document to an existing server"
+msgstr "Dokumentum feltöltése egy meglévő kiszolgálóra"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:84
+msgid "Add document to existing connection"
+msgstr "Dokumentum hozzáadása egy létező kapcsolathoz"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:86
+msgid "Click a row to add the document to that connection."
+msgstr "Kattintson egy sorra a dokumentum hozzáadásához ahhoz a kapcsolathoz."
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:130
+msgid "Connect"
+msgstr "Csatlakozás"
+
+#: kte-plugin/ui/statusoverlay.cpp:51
+msgid "Initializing..."
+msgstr "Előkészítés…"
+
+#: kte-plugin/ui/statusoverlay.cpp:54
+#, kde-format
+msgid "KTextEditor collaborative editing plugin version %1"
+msgstr "KTextEditor együttműködő szerkesztés bővítmény %1. verzió"
+
+#: kte-plugin/ui/statusoverlay.cpp:56
+#, kde-format
+msgid "using libinfinity version %1"
+msgstr "a libinfinity %1. verzió használatával"
+
+#: kte-plugin/ui/statusoverlay.cpp:65
+#, kde-format
+msgctxt "%1 is a progress percentage"
+msgid "Synchronizing document... %1%"
+msgstr "Dokumentum szinkronizálása… %1%"
+
+#: kte-plugin/ui/statusoverlay.cpp:83
+msgid "Joining session..."
+msgstr "Csatlakozás munkamenethez…"
+
+#: kte-plugin/ui/statusoverlay.cpp:86
+msgid "Done."
+msgstr "Kész."
+
+#: kte-plugin/ui/statusoverlay.cpp:99
+msgid "Initiating synchronization..."
+msgstr "Szinkronizáció előkészítése…"
+
+#: notifier-module/infinotenotifier.cpp:53
+msgid "infinotenotifier"
+msgstr "infinotenotifier"
+
+#: notifier-module/infinotenotifier.cpp:54
+msgid "Notification helper for Collaborative Editing"
+msgstr "Értesítés segítő az együttműködő szerkesztéshez"
+
+#: notifier-module/infinotenotifier.cpp:299
+#, kde-format
+msgctxt "%1 is a file name"
+msgid "%1 was added for collaborative editing."
+msgstr "%1 hozzá lett adva együttműködő szerkesztéshez."
+
+#: notifier-module/infinotenotifier.cpp:300
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: notifier-module/infinotenotifier.cpp:307
+msgid "Some files were added for collaborative editing."
+msgstr "Néhány fájl hozzá lett adva együttműködő szerkesztéshez."
+
+#: notifier-module/infinotenotifier.cpp:308
+msgid "Show folder"
+msgstr "Mappa megjelenítése"
