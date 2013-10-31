@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9), cmake, pkg-kde-tools,
  kdelibs5-dev (>= 4:4.5.0),
  libtelepathy-qt4-dev( >= 0.8.9),
  libktpcommoninternalsprivate-dev (>= 0.6.3),
- libqinfinity-dev (>= 0.5.1),
+ libqinfinity-dev (>= 0.5.2),
  libinfinity-0.5-dev,
  infinoted-0.5,
  libgsasl7-dev
