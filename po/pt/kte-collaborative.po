@@ -1,0 +1,639 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kte-collaborative\n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2013-10-14 01:56+0000\n"
+"PO-Revision-Date: 2013-10-14 09:56+0100\n"
+"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
+"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-POFile-IgnoreConsistency: Peer\n"
+"X-POFile-SpellExtra: Colaborativa Colaborativo Brauch Sven infinoteServer\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-POFile-SpellExtra: client infinote dominio localhost colaborativos\n"
+"X-POFile-SpellExtra: KTextEditor infinotenotifier libinfinity Summer Code\n"
+"X-POFile-SpellExtra: of kobby Armin Haynes Edmundson Burgmeier Gregory\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "José Nuno Pires"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "zepires@gmail.com"
+
+#: common/document.cpp:308
+msgid ""
+"Sorry, an internal error occurred in the text synchronization component."
+"<br>You can try to reload the document or disconnect."
+msgstr ""
+"Infelizmente, ocorreu um erro interno no último componente de sincronização "
+"do texto.<br/>Poderá tentar carregar de novo o documento ou então desligar-"
+"se."
+
+#: common/document.cpp:312
+msgid "Reload document"
+msgstr "Recarregar o documento"
+
+#: common/document.cpp:313 kte-plugin/ktecollaborativepluginview.cpp:385
+#: kte-plugin/manageddocument.cpp:215
+msgid "Disconnect"
+msgstr "Desligar"
+
+#: common/document.cpp:509 common/selecteditorwidget.cpp:121
+msgid "Continue"
+msgstr "Continuar"
+
+#: common/document.cpp:510
+msgid ""
+"The document you opened contains non-standard line endings. Do you want to "
+"convert them to the standard \"\\n\" format?<br><br><i>Note: This change "
+"will be synchronized to the server.</i>"
+msgstr ""
+"O documento que abriu contém fins de linha fora do normal. Deseja convertê-"
+"los para o formato-padrão \"\\n\"?<br/><br/><i>Nota: Esta mudança será "
+"sincronizada para o servidor.</i>"
+
+#: common/document.cpp:633
+msgid "Synchronization Failed: "
+msgstr "Não foi possível sincronizar-se: "
+
+#: common/document.cpp:661
+msgid "Could not join session: "
+msgstr "Não foi possível juntar-se à sessão: "
+
+#: common/document.cpp:677
+msgid "Retry"
+msgstr "Repetir"
+
+#: common/document.cpp:681
+#, kde-format
+msgid "Failed to join editing session: %1"
+msgstr "Não foi possível juntar-se à sessão de edição: %1"
+
+#: common/document.cpp:682
+msgid "You can try joining again with a different user name:"
+msgstr "Poder-se-á tentar juntar de novo com um utilizador diferente:"
+
+#: common/document.cpp:684
+msgid "Enter your user name..."
+msgstr "Indique o nome do seu utilizador..."
+
+#: common/document.cpp:694
+msgid "No acceptable user name was given."
+msgstr "Não foi dado nenhum nome de utilizador adequado."
+
+#: common/selecteditorwidget.cpp:42
+msgid "Display folder in Dolphin"
+msgstr "Mostrar a pasta no Dolphin"
+
+#: common/selecteditorwidget.cpp:43
+#, kde-format
+msgid "Start %1"
+msgstr "Iniciar o %1"
+
+#: common/selecteditorwidget.cpp:44 common/selecteditorwidget.cpp:45
+#: common/selecteditorwidget.cpp:46 common/selecteditorwidget.cpp:47
+#, kde-format
+msgid "Open in %1"
+msgstr "Abrir no %1"
+
+#: common/selecteditorwidget.cpp:69
+#, kde-format
+msgctxt "%1 is an application name"
+msgid "The application \"%1\" is not installed on your computer."
+msgstr "A aplicação \"%1\" não está instalada no seu computador."
+
+#: common/selecteditorwidget.cpp:92
+msgid "What action should be taken for collaborative documents by default?"
+msgstr ""
+"Que acção deverá ser tomada para os documentos colaborativos por omissão?"
+
+#: common/selecteditorwidget.cpp:114
+msgid ""
+"It seems you are trying to open a collaborative document for the first time."
+msgstr ""
+"Parece que está a tentar abrir um documento colaborativo pela primeira vez."
+
+#: common/selecteditorwidget.cpp:122
+msgid "Cancel and reject document"
+msgstr "Cancelar e rejeitar o documento"
+
+#: kioslave/kio_infinity.cpp:103
+#, kde-format
+msgid "Could not get %1: The node does not exist."
+msgstr "Não foi possível obter o %1: O nó não existe."
+
+#: kioslave/kio_infinity.cpp:125
+#, kde-format
+msgid "Could not stat %1: No such file or directory."
+msgstr ""
+"Não foi possível obter dados sobre %1: Não existe este ficheiro ou pasta."
+
+#: kioslave/kio_infinity.cpp:299
+#, kde-format
+msgid "Cannot delete %1: No such file or directory"
+msgstr "Não é possível apagar o %1: Não existe esse ficheiro ou pasta."
+
+#: kioslave/kio_infinity.cpp:418
+msgid "Connection timed out."
+msgstr "A ligação expirou."
+
+#: kte-plugin/documentchangetracker.cpp:85
+msgctxt "Refers to a person which is not known"
+msgid "unknown user"
+msgstr "utilizador desconhecido"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:62
+#: kte-plugin/ktecollaborativeplugin.cpp:64
+msgid "Collaborative Editing"
+msgstr "Edição Colaborativa"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:67
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:30
+#: kte-plugin/ktpintegration/servertubehandler.cpp:30
+msgid "Sven Brauch"
+msgstr "Sven Brauch"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:68
+msgid "KTextEditor plugin, Telepathy integration, making stuff work"
+msgstr ""
+"'Plugin' do KTextEditor, integração com o Telepathy, pôr as coisas a "
+"funcionar"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:71
+msgid "Gregory Haynes"
+msgstr "Gregory Haynes"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:72
+msgid "Original author of kobby, which this application is based off"
+msgstr "Autoria original do kobby, no qual se baseia esta aplicação"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:75
+msgid "David Edmundson"
+msgstr "David Edmundson"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:76
+msgid "Google Summer of Code mentor for this project"
+msgstr "Mentor deste projecto no Google Summer of Code"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:79
+msgid "Armin Burgmeier"
+msgstr "Armin Burgmeier"
+
+#: kte-plugin/ktecollaborativeplugin.cpp:80
+msgid "Author of libinfinity"
+msgstr "Autor da 'libinfinity'"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:84
+msgid "Show offline users"
+msgstr "Mostrar os utilizadores desligados"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:87
+msgid "Show users without contributions"
+msgstr "Mostrar os utilizadores sem contribuições"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:214
+#, kde-format
+msgctxt "tells how many users are online"
+msgid "%1 users (%2 online)"
+msgstr "%1 utilizadores (%2 ligados)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:220
+msgid "Users:"
+msgstr "Utilizadores:"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:226
+#, kde-format
+msgctxt "%1 is your name"
+msgid "%1 (you)"
+msgstr "%1 (você)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:227
+#, kde-format
+msgctxt "%1 is a name"
+msgid "%1 (offline)"
+msgstr "%1 (desligado)"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:295
+msgid "Disconnected from collaboration server."
+msgstr "Desligou-se do servidor de colaboração."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:300
+#: kte-plugin/ui/statusoverlay.cpp:96
+msgid "Connecting..."
+msgstr "A ligar..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:303
+msgid "Synchronizing document..."
+msgstr "A sincronizar o documento..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:306
+msgid "Disconnecting..."
+msgstr "A desligar..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:325
+msgid "Connected to collaboration server."
+msgstr "Está ligado ao servidor colaborativo."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:353
+msgid "Open collaborative document..."
+msgstr "Abrir um documento colaborativo..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:354
+msgid "Open a collaborative document from a manually specified server"
+msgstr ""
+"Abrir um documento colaborativo a partir de um servidor indicado manualmente"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:359
+msgid "Save a local copy..."
+msgstr "Gravar uma cópia local..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:360
+msgid ""
+"Save a local copy of the current document, but continue synchronizing changes"
+msgstr ""
+"Grava uma cópia local do documento actual, mas continuar com as mudanças de "
+"sincronização"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:366
+msgid "Show shared documents folder"
+msgstr "Mostrar a pasta de documentos partilhados"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:371
+msgid "Share document..."
+msgstr "Partilhar o documento..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:372
+msgid ""
+"Collaboratively edit the current document with an instant messenger contact"
+msgstr ""
+"Editar de forma colaborativa o documento actual com um contacto de mensagens "
+"instantâneas"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:379
+msgid "Change user name..."
+msgstr "Mudar o nome do utilizador..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:380
+msgid "Change your user name for the current document"
+msgstr "Mudar o nome do seu utilizador para o documento actual"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:386
+msgid ""
+"Disconnect from the collaborative server, and stop synchronizing changes to "
+"the document"
+msgstr ""
+"Desligar-se do servidor colaborativo, parando a sincronização das alterações "
+"no documento"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:393
+msgid "Clear user highlights"
+msgstr "Limpar os destaques do utilizador"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:398
+msgid "Configure..."
+msgstr "Configurar..."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:484
+#, kde-format
+msgctxt "%1 is a user name"
+msgid "Written by: <b>%1</b>"
+msgstr "Escrito por: <b>%1</b>"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:552
+msgid ""
+"You cannot change your user name for a document you are not subscribed to."
+msgstr ""
+"Não pode alterar o nome do seu utilizador para um documento onde não está "
+"inscrito."
+
+#: kte-plugin/ktecollaborativepluginview.cpp:556
+msgid "Change user name"
+msgstr "Mudar o nome do utilizador"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:561
+msgid "Enter your new user name:"
+msgstr "Indique o novo nome do seu utilizador:"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:610
+#, kde-format
+msgid "Failed to save file to %1"
+msgstr "Não foi possível gravar o ficheiro em %1"
+
+#: kte-plugin/ktecollaborativepluginview.cpp:618
+msgid ""
+"You must save the document before sharing it. Do you want to do that now?"
+msgstr "Deve gravar o documento antes de o partilhar. Deseja fazê-lo agora?"
+
+#. i18n: ectx: Menu (collaborative)
+#: kte-plugin/ktexteditor_collaborativeui.rc:5
+msgid "&Collaborative"
+msgstr "&Colaborativo"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:28
+msgid "infinote-client"
+msgstr "infinote-client"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:28
+#: kte-plugin/ktpintegration/servertubehandler.cpp:28
+msgid "Helper application for collaborative editing"
+msgstr "Aplicação auxiliar para edição colaborativa"
+
+#: kte-plugin/ktpintegration/clienttubehandler.cpp:29
+#: kte-plugin/ktpintegration/servertubehandler.cpp:29
+msgid "(C) 2013 Sven Brauch"
+msgstr "(C) 2013 Sven Brauch"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:103
+msgid "Type"
+msgstr "Tipo"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:106
+msgid "Peer"
+msgstr "Contacto Remoto"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:109
+msgid "Port"
+msgstr "Porto"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:138
+msgid "Contact"
+msgstr "Contacto"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:141
+msgid "Chatroom"
+msgstr "Sala de Conversação"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:144
+msgid "unknown"
+msgstr "desconhecido"
+
+#: kte-plugin/ktpintegration/connectionswidget.cpp:202
+msgid "No active connections."
+msgstr "Sem ligações activas."
+
+#: kte-plugin/ktpintegration/inftube-old.cpp:176
+#, kde-format
+msgid ""
+"Failed to establish a connection to the selected contact. Error message was: "
+"\"%1\""
+msgstr ""
+"Não foi possível estabelecer uma ligação com o contacto seleccionado. A "
+"mensagem de erro foi: \"%1\""
+
+#: kte-plugin/ktpintegration/inftube.cpp:199
+#, kde-format
+msgid "Failed to share file: %1"
+msgstr "Não foi possível partilhar o ficheiro: %1"
+
+#: kte-plugin/ktpintegration/inftube.cpp:214
+#, kde-format
+msgid ""
+"Did not get a valid channel object from Telepathy. Check your installation."
+"<br>Error message was: <b>%1</b>"
+msgstr ""
+"Não foi possível obter um objecto de canal válido do Telepathy. Verifique a "
+"sua instalação.<br/>A mensagem de erro foi: <b>%1</b>"
+
+#: kte-plugin/ktpintegration/inftube.cpp:335
+msgid ""
+"Failed to start collaborative server, the session could not be initiated."
+msgstr ""
+"Não foi possível iniciar o servidor colaborativo; é impossível assim iniciar "
+"a sessão."
+
+#: kte-plugin/ktpintegration/inftube.cpp:336
+#, kde-format
+msgctxt "%1: directory"
+msgid "Look at the log files in %1 for more information."
+msgstr "Procure nos ficheiros de registo em %1 por mais informações."
+
+#: kte-plugin/ktpintegration/servertubehandler.cpp:28
+msgid "infinoteServer"
+msgstr "infinoteServer"
+
+#: kte-plugin/manageddocument.cpp:165
+#, kde-format
+msgid "Failed to open file %1, make sure it exists."
+msgstr "Não foi possível aceder ao ficheiro %1; certifique-se que ele existe."
+
+#: kte-plugin/manageddocument.cpp:210
+msgid "Collaborative text editing"
+msgstr "Edição de texto colaborativa"
+
+#: kte-plugin/manageddocument.cpp:254
+#, kde-format
+msgid ""
+"The session for <br><b>%1</b><br> was closed by the remote host, possibly "
+"the file you were editing was deleted by someone."
+msgstr ""
+"A sessão de <br/><b>%1</b><br/> foi fechada pela máquina remota; "
+"provavelmente o ficheiro que estava a editar foi apagado por alguém."
+
+#: kte-plugin/manageddocument.cpp:268
+msgid "The URL you tried to open is a directory, not a document."
+msgstr "O URL que tentou abrir é uma pasta, não um documento."
+
+#: kte-plugin/manageddocument.cpp:272
+#, kde-format
+msgid "The document type \"%1\" is not supported by this program."
+msgstr "O tipo de documento \"%1\" não é suportado por este programa."
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:49
+msgid "Highlights and Notifications"
+msgstr "Destaques e Notificações"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:52
+msgid "Display popup widgets"
+msgstr "Mostrar mensagens instantâneas"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:53
+msgid "Colorize text background"
+msgstr "Colorir o fundo do texto"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:54
+msgid "Display text tooltips"
+msgstr "Mostrar as dicas de texto"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:61
+msgid "Colors"
+msgstr "Cores"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:66
+msgid "Highlight saturation"
+msgstr "Realçar a saturação"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:70
+msgid "Default application"
+msgstr "Aplicação predefinida"
+
+#: kte-plugin/settings/kcm_kte_collaborative.cpp:77
+msgid "Some changes might only be applied for newly opened documents."
+msgstr ""
+"Algumas alterações só podem ser aplicadas para os documentos acabados de "
+"abrir."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:37
+msgid "Manually enter connection parameters"
+msgstr "Indicar manualmente os parâmetros da ligação"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:41
+msgctxt "Examples for possible hostname formats"
+msgid "e.g. 46.4.96.250, localhost, or mydomain.com"
+msgstr "p.ex. 46.4.96.250, localhost, ou meu-dominio.com"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:44
+msgid "The name you want to appear with in the session"
+msgstr "O nome com que deseja aparecer na sessão"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:46
+msgid "Leave blank if not required by the server"
+msgstr "Deixe em branco se não for necessário para o servidor"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:53
+msgid ""
+"If you want to save a set of manually entered parameters for later, just add "
+"a bookmark in the file dialog which opens after entering the parameters. "
+"When you want to re-use them, just select File -> Open and click the "
+"bookmark."
+msgstr ""
+"Se quiser gravar um conjunto de parâmetros definidos manualmente para a "
+"posteridade, basta adicionar um favorito na janela de ficheiros que abre "
+"após introduzir os parâmetros. Quando os quiser reutilizar, basta "
+"seleccionar 'Ficheiro -> Abrir' e carregar no favorito."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:58
+msgid "Remote host address:"
+msgstr "Endereço do servidor remoto:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:59
+msgid "Advanced..."
+msgstr "Avançado..."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:91
+msgid "Choose an existing telepathy-based connection"
+msgstr "Escolher uma ligação existente e baseada no Telepathy"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:94
+msgid "Click a connection to open a document from there."
+msgstr "Carregue numa ligação para abrir um documento a partir daí."
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:120
+msgid "Port:"
+msgstr "Porto:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:121
+msgid "User name:"
+msgstr "Utilizador:"
+
+#: kte-plugin/ui/opencollabdocumentdialog.cpp:122
+msgid "Password (optional):"
+msgstr "Senha (opcional):"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:62
+msgid ""
+"<p>You can select a contact or chatroom to share this document with below.</"
+"p><p>Since each such connection to a contact or chatroom can contain an "
+"arbitrary number of documents, you can also add this document to an existing "
+"connection.</p>"
+msgstr ""
+"<p>Poderá seleccionar abaixo um contacto ou sala de conversação com quem "
+"partilhar este documento.</p><p>Dado que cada uma dessas ligações a um dado "
+"contacto ou sala de conversação poderá conter um número arbitrário de "
+"documentos, também poderá adicionar este documento a uma ligação existente.</"
+"p>"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:69
+msgid "Create a new connection"
+msgstr "Criar uma nova ligação"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:71
+msgid "Share document with contact"
+msgstr "Partilhar o documento com o contacto"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:73
+msgid "Share document with chat room"
+msgstr "Partilhar o documento com a sala de conversação"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:75
+msgid "Upload document to an existing server"
+msgstr "Enviar o documento para um servidor existente"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:84
+msgid "Add document to existing connection"
+msgstr "Adicionar o documento à ligação existente"
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:86
+msgid "Click a row to add the document to that connection."
+msgstr "Carregue numa linha para adicionar o documento a essa ligação."
+
+#: kte-plugin/ui/sharedocumentdialog.cpp:130
+msgid "Connect"
+msgstr "Ligar"
+
+#: kte-plugin/ui/statusoverlay.cpp:51
+msgid "Initializing..."
+msgstr "A inicializar..."
+
+#: kte-plugin/ui/statusoverlay.cpp:54
+#, kde-format
+msgid "KTextEditor collaborative editing plugin version %1"
+msgstr "'Plugin' de edição colaborativa de texto do KTextEditor - versão %1"
+
+#: kte-plugin/ui/statusoverlay.cpp:56
+#, kde-format
+msgid "using libinfinity version %1"
+msgstr "a usar a versão %1 da 'libinfinity'"
+
+#: kte-plugin/ui/statusoverlay.cpp:65
+#, kde-format
+msgctxt "%1 is a progress percentage"
+msgid "Synchronizing document... %1%"
+msgstr "A sincronizar o documento... %1%"
+
+#: kte-plugin/ui/statusoverlay.cpp:83
+msgid "Joining session..."
+msgstr "A juntar-se à sessão..."
+
+#: kte-plugin/ui/statusoverlay.cpp:86
+msgid "Done."
+msgstr "Terminado."
+
+#: kte-plugin/ui/statusoverlay.cpp:99
+msgid "Initiating synchronization..."
+msgstr "A iniciar a sincronização..."
+
+#: notifier-module/infinotenotifier.cpp:53
+msgid "infinotenotifier"
+msgstr "infinotenotifier"
+
+#: notifier-module/infinotenotifier.cpp:54
+msgid "Notification helper for Collaborative Editing"
+msgstr "Utilitário de notificações de edição colaborativa"
+
+#: notifier-module/infinotenotifier.cpp:299
+#, kde-format
+msgctxt "%1 is a file name"
+msgid "%1 was added for collaborative editing."
+msgstr "Foi adicionado o %1 para a sua edição colaborativa."
+
+#: notifier-module/infinotenotifier.cpp:300
+msgid "Edit"
+msgstr "Editar"
+
+#: notifier-module/infinotenotifier.cpp:307
+msgid "Some files were added for collaborative editing."
+msgstr "Foram adicionados alguns ficheiros para edição colaborativa."
+
+#: notifier-module/infinotenotifier.cpp:308
+msgid "Show folder"
+msgstr "Mostrar a pasta"
