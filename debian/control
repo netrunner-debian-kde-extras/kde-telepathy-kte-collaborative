@@ -27,3 +27,16 @@ Description: Collaborative Text Editor support for KDE
  .
  You can also use Telepathy to establish pseudo peer-to-peer connections
  to jabber contacts from the same menu.
+
+Package: kte-collaborative-dbg
+Section: debug
+Architecture: any
+Priority: extra
+Depends: kte-collaborative (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Debug symbols for KDE Text Editor collaborative plugin
+ kte-collaborative provides a KIO and Kate plugin to access infinote
+ files. You can open files directly as
+ inf://myusername@servername.tld:port/path/to/document.txt or
+ you can browse infinote servers using the KDE file dialog or file managers.
+ .
+ This package contains debugging symbols.

@@ -5,6 +5,6 @@ export DH_VERBOSE=1
 include /usr/share/dpkg/architecture.mk
 
 %:
-	dh $@ --with kde --list-missing
+	dh $@ --with kde --list-missing --dbg-package=kte-collaborative-dbg
 
 .PHONY: override_dh_auto_test
