@@ -7,4 +7,9 @@ include /usr/share/dpkg/architecture.mk
 %:
 	dh $@ --with kde --list-missing --dbg-package=kte-collaborative-dbg
 
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/kte-collaborative
+	rm debian/kte-collaborative/usr/lib/libinftube.so
+	rm debian/kte-collaborative/usr/lib/libktecollaborativecommon.so
+
 .PHONY: override_dh_auto_test
