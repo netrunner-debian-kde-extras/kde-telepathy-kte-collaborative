@@ -1,0 +1,5 @@
+package-name-doesnt-match-sonames libinftube0.1.80 libktecollaborativecommon0.1.80
+# These are supposed to be private to the plugin so we can avoid the symbols file for now.
+no-symbols-control-file usr/lib/libktecollaborativecommon.so.0.1.80
+no-symbols-control-file usr/lib/libinftube.so.0.1.80
+no-upstream-changelog
