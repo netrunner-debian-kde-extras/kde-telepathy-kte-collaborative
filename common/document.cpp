@@ -18,6 +18,7 @@
 
 #include "document.h"
 #include "utils.h"
+#include "noteplugin.h"
 
 #include <libinftext/inf-text-undo-grouping.h>
 
@@ -51,9 +52,7 @@
 #include <QFormLayout>
 #include <QLabel>
 
-#ifdef KTEXTEDITOR_HAS_BUFFER_IFACE
-#include <ktexteditor/bufferinterface.h>
-#endif
+#include <KTextEditor/ConfigInterface>
 
 namespace Kobby
 {
@@ -64,6 +63,8 @@ Document::Document( KTextEditor::Document* kDocument )
     , m_dirty( false )
 {
     m_kDocument->setParent( 0 );
+    KTextEditor::ConfigInterface* iface = qobject_cast<KTextEditor::ConfigInterface*>(m_kDocument);
+    iface->setConfigValue("replace-tabs", false);
     connect( m_kDocument, SIGNAL(textChanged( KTextEditor::Document* )),
         this, SLOT(textChanged( KTextEditor::Document* )) );
     connect( m_kDocument, SIGNAL(documentSavedOrUploaded( KTextEditor::Document*,
@@ -107,12 +108,13 @@ bool Document::isDirty()
 
 void Document::setLoadState( Document::LoadState state )
 {
-    if( state != LoadState() )
+    if( state != loadState() )
     {
         m_loadState = state;
         emit( loadStateChanged( this, state ) );
-        if( state == Document::Complete )
+        if( state == Document::Complete ) {
             emit( loadingComplete( this ) );
+        }
     }
 }
 
@@ -134,6 +136,7 @@ void Document::throwFatalError( const QString &message )
 
 KDocumentTextBuffer::KDocumentTextBuffer( KTextEditor::Document* kDocument,
     const QString &encoding,
+    Kobby::NotePlugin* plugin,
     QObject *parent )
     : QInfinity::AbstractTextBuffer( encoding, parent )
     , blockRemoteInsert( false )
@@ -143,6 +146,7 @@ KDocumentTextBuffer::KDocumentTextBuffer( KTextEditor::Document* kDocument,
     , m_undoGrouping( QInfinity::UndoGrouping::wrap(inf_text_undo_grouping_new(), this) )
     , m_aboutToClose( false )
 {
+    plugin->registerTextBuffer(kDocument->url().path(), this);
     kDebug() << "new text buffer for document" << kDocument;
     connect( kDocument, SIGNAL(textInserted(KTextEditor::Document*, const KTextEditor::Range&)),
         this, SLOT(localTextInserted(KTextEditor::Document*, const KTextEditor::Range&)) );
@@ -211,26 +215,10 @@ void KDocumentTextBuffer::onInsertText( unsigned int offset,
         KTextEditor::Cursor startCursor = offsetToCursor_kte( offset );
         QString str = codec()->toUnicode( chunk.text() );
         ReadWriteTransaction transaction(kDocument());
-#ifdef KTEXTEDITOR_HAS_BUFFER_IFACE
-        // The compile-time check just verifies that the interface is present.
-        // This does not guarantee that it is supported by the KTE implementation used here.
-        if ( KTextEditor::BufferInterface* iface = qobject_cast<KTextEditor::BufferInterface*>(kDocument()) ) {
-            iface->insertTextSilent(startCursor, str);
-        }
-#else
-        if ( false ) { }
-#endif
-        else {
-            kDebug() << "Text editor does not support the Buffer interface. Using workaround for tabs.";
-#ifdef ENABLE_TAB_HACK
-            // If we don't have the buffer iface and the tab hack is enabled, replace
-            // all tabs by 1 space. That won't break stuff, since it has the same length
-            str = str.replace("\t", " ");
-#endif
-            kDocument()->blockSignals(true);
-            kDocument()->insertText( startCursor, str );
-            kDocument()->blockSignals(false);
-        }
+        kDocument()->blockSignals(true);
+        kDocument()->insertText( startCursor, str );
+        kDocument()->blockSignals(false);
+        Q_ASSERT(!qobject_cast<KTextEditor::ConfigInterface*>(kDocument())->configValue("replace-tabs").toBool());
         emit remoteChangedText(KTextEditor::Range(startCursor, offsetToCursor_kte(offset+chunk.length())), user, false);
         checkConsistency();
     }
@@ -280,18 +268,6 @@ void KDocumentTextBuffer::onEraseText( unsigned int offset,
 void KDocumentTextBuffer::checkConsistency()
 {
     QString bufferContents = codec()->toUnicode( slice(0, length())->text() );
-#ifndef KTEXTEDITOR_HAS_BUFFER_IFACE
-    if ( false ) { }
-#else
-    if ( qobject_cast<KTextEditor::BufferInterface*>(kDocument()) ) { }
-#endif
-#ifdef ENABLE_TAB_HACK
-    else {
-        // In this case, it's allowed that the buffer and the document differ in tabs being
-        // replaced by spaces.
-        bufferContents = bufferContents.replace("\t", " ");
-    }
-#endif
     QString documentContents = kDocument()->text();
     if ( bufferContents != documentContents ) {
         KUrl url = kDocument()->url();
@@ -395,6 +371,7 @@ void KDocumentTextBuffer::localTextRemoved( KTextEditor::Document *document,
 
 void KDocumentTextBuffer::setUser( QPointer<QInfinity::User> user )
 {
+    qDebug() << "SET USER:" << m_user;
     m_user = user;
 }
 
@@ -656,7 +633,7 @@ void InfTextDocument::slotJoinFinished( QPointer<QInfinity::User> user )
     kDebug() << "in document" << kDocument()->url();
 }
 
-void InfTextDocument::slotJoinFailed( GError *gerror )
+void InfTextDocument::slotJoinFailed( const GError *gerror )
 {
     QString emsg = i18n( "Could not join session: " );
     if ( gerror ) {
@@ -789,8 +766,8 @@ void InfTextDocument::joinSession(const QString& forceUserName)
             ColorHelper::colorForUsername(userName).hue() / 360.0 );
         connect( req, SIGNAL(finished(QPointer<QInfinity::User>)),
             this, SLOT(slotJoinFinished(QPointer<QInfinity::User>)) );
-        connect( req, SIGNAL(failed(GError*)),
-            this, SLOT(slotJoinFailed(GError*)) );
+        connect( req, SIGNAL(failed(const GError*)),
+            this, SLOT(slotJoinFailed(const GError*)) );
     }
     else
         connect( m_session, SIGNAL(statusChanged()),

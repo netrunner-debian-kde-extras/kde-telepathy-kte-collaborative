@@ -36,15 +36,19 @@ class DocumentBuilder;
 class KTECOLLABORATIVECOMMON_EXPORT NotePlugin
     : public QInfinity::NotePlugin
 {
-
     public:
         NotePlugin( QObject *parent = 0 );
 
+        void registerTextBuffer(const QString& path, KDocumentTextBuffer* textBuffer);
+
         QInfinity::Session *createSession(QInfinity::CommunicationManager *commMgr,
             QInfinity::Session::Status sess_status,
-            QInfinity::CommunicationJoinedGroup *syncGroup,
+            QInfinity::CommunicationGroup *syncGroup,
             QInfinity::XmlConnection *syncConnection,
-            void* userData );
+            void* clientPluginUserData = 0 );
+
+    private:
+        QHash<QString, KDocumentTextBuffer*> buffers;
 
 };
 

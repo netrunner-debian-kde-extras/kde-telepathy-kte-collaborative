@@ -57,6 +57,7 @@ namespace QInfinity
 
 namespace Kobby
 {
+class NotePlugin;
 
 int countUnicodeCharacters(const QString& str);
 
@@ -178,6 +179,7 @@ class KTECOLLABORATIVECOMMON_EXPORT KDocumentTextBuffer
     public:
         KDocumentTextBuffer( KTextEditor::Document* kDocument,
             const QString &encoding,
+            Kobby::NotePlugin* plugin,
             QObject *parent = 0 );
         ~KDocumentTextBuffer();
 
@@ -296,7 +298,7 @@ class KTECOLLABORATIVECOMMON_EXPORT InfTextDocument
         void slotSynchronized();
         void slotSynchronizationFailed( GError *gerror );
         void slotJoinFinished( QPointer<QInfinity::User> );
-        void slotJoinFailed( GError *gerror );
+        void slotJoinFailed( const GError *gerror );
         void slotViewCreated( KTextEditor::Document *doc,
             KTextEditor::View *view );
         void slotCanUndo( bool enable );

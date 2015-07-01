@@ -115,6 +115,15 @@ void InfinityProtocol::get(const KUrl& url )
 void InfinityProtocol::stat(const KUrl& url)
 {
     kDebug() << "STAT " << url.url();
+
+    if ( url.path().isEmpty() ) {
+        KUrl newUrl(url);
+        newUrl.setPath("/");
+        redirection(newUrl);
+        finished();
+        return;
+    }
+
     if ( ! doConnect(Peer(url)) ) {
         return;
     }
@@ -134,7 +143,7 @@ void InfinityProtocol::stat(const KUrl& url)
     entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
     entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, iter.name());
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, iter.isDirectory() ? S_IFDIR : S_IFREG);
-    entry.insert(KIO::UDSEntry::UDS_ACCESS, 0x777);
+    entry.insert(KIO::UDSEntry::UDS_ACCESS, 07777);
     statEntry(entry);
 
     finished();
@@ -183,15 +192,15 @@ bool InfinityProtocol::doConnect(const Peer& peer)
         error(KIO::ERR_UNKNOWN_HOST, peer.hostname);
         return false;
     }
-    m_browserModel->addConnection(static_cast<QInfinity::XmlConnection*>(m_connection->xmppConnection()), "kio_root");
     m_connection->open();
+    m_browserModel->addConnection(static_cast<QInfinity::XmlConnection*>(m_connection->xmppConnection()), "kio_root");
 
     connect(browser(), SIGNAL(connectionEstablished(const QInfinity::Browser*)),
             &loop, SLOT(quit()));
     connect(browser(), SIGNAL(error(const QInfinity::Browser*,QString)),
             &loop, SLOT(quit()));
     loop.exec();
-    if ( ! timeout.isActive() || browser()->connectionStatus() != INFC_BROWSER_CONNECTED ) {
+    if ( ! timeout.isActive() || browser()->connectionStatus() != INF_BROWSER_OPEN ) {
         kDebug() << "failed to connect";
         error(KIO::ERR_COULD_NOT_CONNECT, QString("%1:%2").arg(peer.hostname, QString::number(peer.port)));
         return false;
@@ -268,9 +277,14 @@ void InfinityProtocol::put(const KUrl& url, int /*permissions*/, JobFlags /*flag
         inf_text_buffer_insert_text(INF_TEXT_BUFFER(textBuffer), 0, initialContents,
                                     initialContents.size(), QString(initialContents).size(), user);
 
-        req = NodeRequest::wrap(infc_browser_add_note_with_content(
-                INFC_BROWSER(browser()->gobject()), iter.infBrowserIter(),
-                url.fileName().toAscii().data(), m_notePlugin->infPlugin(), INF_SESSION(session), true));
+        req = NodeRequest::wrap( inf_browser_add_note(
+                INF_BROWSER(browser()->gobject()),
+                iter.infBrowserIter(),
+                url.fileName().toAscii().data(),
+                m_notePlugin->infPlugin()->note_type,
+                0,
+                INF_SESSION(session),
+                true, 0, 0) );
         g_object_unref(session);
         g_object_unref(user_table);
         inf_session_set_user_status(INF_SESSION(session), user, INF_USER_UNAVAILABLE);
@@ -384,7 +398,7 @@ void InfinityProtocol::listDir(const KUrl &url)
             UDSEntry entry;
             entry.insert( KIO::UDSEntry::UDS_NAME, iter.name() );
             entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, iter.isDirectory() ? S_IFDIR : S_IFREG );
-            entry.insert( KIO::UDSEntry::UDS_ACCESS, 0x777 );
+            entry.insert( KIO::UDSEntry::UDS_ACCESS, 07777 );
             listEntry(entry, false);
         } while ( iter.next() );
     }

@@ -37,14 +37,22 @@ NotePlugin::NotePlugin( QObject *parent )
 {
 }
 
+void NotePlugin::registerTextBuffer(const QString& /*path*/, KDocumentTextBuffer* /*textBuffer*/)
+{
+    // disabled until 0.7
+//     Q_ASSERT( ! buffers.contains(path) );
+//     buffers[path] = textBuffer;
+}
+
 QInfinity::Session *NotePlugin::createSession( QInfinity::CommunicationManager *commMgr,
     QInfinity::Session::Status sess_status,
-    QInfinity::CommunicationJoinedGroup *syncGroup,
+    QInfinity::CommunicationGroup *syncGroup,
     QInfinity::XmlConnection *syncConnection,
-    void* userData )
+    void* clientPluginUserData )
 {
+    QInfinity::TextBuffer* buffer = static_cast<QInfinity::TextBuffer*>(clientPluginUserData);
     QInfinity::TextSession *session = new QInfinity::TextSession( *commMgr,
-        *static_cast<KDocumentTextBuffer*>(userData),
+        *buffer,
         sess_status,
         *syncGroup,
         *syncConnection );
