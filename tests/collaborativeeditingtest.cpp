@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#include "kte-plugin/ktpintegration/infinoted.h"
 #include "collaborativeeditingtest.h"
 
 #include <KTextEditor/Factory>
@@ -59,7 +60,7 @@ void CollaborativeEditingTest::initTestCase()
     m_serverProcess->setEnvironment(QStringList() << "LIBINFINITY_DEBUG_PRINT_TRAFFIC=1");
     m_serverProcess->setStandardOutputFile(serverDirectory() + "/infinoted.log");
     m_serverProcess->setStandardErrorFile(serverDirectory() + "/infinoted.errors");
-    m_serverProcess->start("/usr/bin/env", QStringList() << "infinoted-0.5" << "--security-policy=no-tls"
+    m_serverProcess->start(INFINOTED_PATH, QStringList() << "--security-policy=no-tls"
                                            << "-r" << serverDirectory() << "-p" << QString::number(port()));
     m_serverProcess->waitForStarted(500);
     // try binding to the server port; if this works, it has finished starting up

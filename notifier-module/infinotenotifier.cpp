@@ -221,13 +221,13 @@ void InfinoteNotifier::connectionEstablished(const QInfinity::Browser* browser)
 void InfinoteNotifier::handleItemChanged(BrowserIter iter, bool removal)
 {
     QInfinity::BrowserIter copy(iter);
-    if ( copy.parent() && infc_browser_iter_get_explore_request(copy.infBrowser(), copy.infBrowserIter()) ) {
+    if ( copy.parent() && copy.exploreRequest() ) {
         // the directory is just being explored, so the added signal is not a "real" one
         return;
     }
     QInfinity::XmlConnection* connection = iter.browser()->connection();
     if ( ! connection
-         || iter.browser()->connectionStatus() != INFC_BROWSER_CONNECTED
+         || iter.browser()->connectionStatus() != INF_BROWSER_OPEN
          || connection->status() != QInfinity::XmlConnection::Open
          || ! m_connectionItemMap.contains(connection) )
     {

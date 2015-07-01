@@ -167,6 +167,11 @@ public slots:
     void lookupFailed();
 
     /**
+     * @brief Tells if the document is fully ready (i.e. if documentReady() has been emitted)
+     */
+    bool isReady() const;
+
+    /*
      * @brief Invoked when a subscription request fails.
      */
     void subscriptionFailed(GError*);
@@ -208,6 +213,7 @@ private:
     QInfinity::NotePlugin* m_notePlugin;
     Kobby::Connection* m_connection;
     bool m_subscribed;
+    bool m_ready;
     QPointer< QInfinity::SessionProxy > m_proxy;
     Kobby::InfTextDocument* m_infDocument;
     // id of the browser iter for this document, for checking whether signals are meant for it

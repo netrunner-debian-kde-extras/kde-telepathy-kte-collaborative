@@ -29,13 +29,15 @@
 #include "documentchangetracker.h"
 #include "settings/kcm_kte_collaborative.h"
 #include "ktpintegration/inftube.h"
-#include <common/utils.h>
+#include "common/utils.h"
 
 #include <libqinfinity/user.h>
 #include <libqinfinity/usertable.h>
 #include <KTp/Widgets/contact-grid-dialog.h>
 #include <KTp/Widgets/join-chat-room-dialog.h>
 #include <ktexteditor/texthintinterface.h>
+#include <ktexteditor/containerinterface.h>
+#include <ktexteditor/editorchooser.h>
 
 #include <QLayout>
 #include <QLabel>
@@ -363,7 +365,7 @@ KteCollaborativePluginView::KteCollaborativePluginView(KTextEditor::View* kteVie
     m_saveCopyAction->setIcon(KIcon("document-save-as"));
 
     m_openFileManagerAction = actionCollection()->addAction("kobby_open_file_manager", this, SLOT(openFileManagerActionClicked()));
-    m_openFileManagerAction->setText(i18n("Open file manager"));
+    m_openFileManagerAction->setText(i18n("Show shared documents folder"));
     m_openFileManagerAction->setShortcut(KShortcut(QKeySequence("Ctrl+Meta+F")), KAction::DefaultShortcut);
     m_openFileManagerAction->setIcon(KIcon("system-file-manager"));
 
@@ -503,7 +505,14 @@ void KteCollaborativePluginView::enableUi()
     m_statusBar = new CollaborativeStatusBar(this);
     connect(m_document->connection(), SIGNAL(statusChanged(Connection*,QInfinity::XmlConnection::Status)),
             statusBar(), SLOT(connectionStatusChanged(Connection*,QInfinity::XmlConnection::Status)), Qt::UniqueConnection);
+
+    // Call all the slots once to ensure a consistent state
     statusBar()->connectionStatusChanged(m_document->connection(), m_document->connection()->status());
+    if ( m_document->isReady() ) {
+        statusBar()->sessionFullyReady();
+        statusBar()->usersChanged();
+    }
+
     connect(m_document, SIGNAL(documentReady(ManagedDocument*)),
             this, SLOT(documentReady(ManagedDocument*)), Qt::UniqueConnection);
     m_view->layout()->addWidget(m_statusBar);
@@ -586,7 +595,7 @@ void KteCollaborativePluginView::openActionClicked()
     OpenCollabDocumentDialog* dialog = new OpenCollabDocumentDialog();
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(dialog, SIGNAL(shouldOpenDocument(KUrl)),
-            m_view->document(), SLOT(openUrl(KUrl)));
+            this, SLOT(openFile(KUrl)));
     dialog->show();
 }
 
@@ -630,15 +639,29 @@ void KteCollaborativePluginView::shareActionClicked()
     Tp::registerTypes();
     ShareDocumentDialog dialog(m_view);
     connect(&dialog, SIGNAL(shouldOpenDocument(KUrl)),
-            this, SLOT(openFile(KUrl)));
+            m_view->document(), SLOT(openUrl(KUrl)));
     dialog.exec();
 }
 
 void KteCollaborativePluginView::openFile(KUrl url)
 {
     kDebug() << "opening file" << url;
-    m_view->document()->setProperty("oldUrl", m_view->document()->url().url());
-    m_view->document()->openUrl(url.url());
+    KTextEditor::Editor* editor = KTextEditor::EditorChooser::editor();
+    KTextEditor::ContainerInterface* iface = qobject_cast<KTextEditor::ContainerInterface*>(editor);
+    KTextEditor::Document* document = 0;
+    if ( iface ) {
+        KTextEditor::MdiContainer* mdiIface = qobject_cast<KTextEditor::MdiContainer*>(iface->container());
+        if ( mdiIface ) {
+            document = mdiIface->createDocument();
+            mdiIface->createView(document);
+        }
+    }
+    if ( ! document ) {
+        // fallback to using the active document
+        document = m_view->document();
+    }
+    document->setProperty("oldUrl", m_view->document()->url().url());
+    document->openUrl(url.url());
 }
 
 KteCollaborativePluginView::~KteCollaborativePluginView()

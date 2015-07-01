@@ -1,0 +1,7 @@
+*_automoc*
+lib
+moc_view.cpp
+kobby.app
+kobbysettings.cpp
+kobbysettings.h
+
