@@ -7,11 +7,11 @@ Build-Depends: debhelper (>= 9), cmake, pkg-kde-tools,
  kdelibs5-dev (>= 4:4.5.0),
  libtelepathy-qt4-dev( >= 0.8.9),
  libktpcommoninternalsprivate-dev (>= 0.7.0),
- libqinfinity-dev (>= 1:0.5.2),
- libinfinity-0.5-dev,
- infinoted-0.5,
+ libqinfinity-dev (>= 1:0.5.2+git20140831),
+ libinfinity-0.6-dev,
+ infinoted,
  libgsasl7-dev
-Standards-Version: 3.9.4
+Standards-Version: 3.9.6
 Homepage: https://projects.kde.org/projects/playground/network/kte-collaborative
 Vcs-Git: git://anonscm.debian.org/pkg-kde/kde-extras/kde-telepathy/kte-collaborative.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-kde/kde-extras/kde-telepathy/kte-collaborative.git
